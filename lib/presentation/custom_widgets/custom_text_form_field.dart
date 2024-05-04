@@ -9,11 +9,11 @@ class CustomTextFormField extends StatelessWidget {
   final Icon icon;
   final Validator? validator;
   final bool hideText;
-  final TextInputType ?type;
+  final TextInputType? type;
 
   const CustomTextFormField({
     Key? key,
-    this.type=TextInputType.emailAddress,
+    this.type = TextInputType.emailAddress,
     required this.title,
     this.hideText = false,
     this.validator,
@@ -36,31 +36,43 @@ class CustomTextFormField extends StatelessWidget {
           ),
         ),
         SizedBox(height: height * .015),
-        TextFormField(
-          keyboardType:type ,
-          obscureText: hideText,
-          validator: validator,
-          controller: controller,
-          style: TextStyle(
-              color: Theme.of(context)
-                  .primaryColor), // Set text color to primary color
-          decoration: InputDecoration(
-            hintText: hint,
-            hintStyle: TextStyle(
-                color: Theme.of(context)
-                    .primaryColor), // Set hint color to primary color with opacity
-            prefixIcon: icon,
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context)
-                      .primaryColor), // Set border color to primary color
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
-            ),
-            border: OutlineInputBorder(
-              borderSide: BorderSide(
-                  color: Theme.of(context)
-                      .primaryColor), // Set border color to primary color with opacity
-              borderRadius: const BorderRadius.all(Radius.circular(15)),
+        Container(
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 145, 143, 143)
+                    .withOpacity(0.5), // Set shadow color and opacity
+                spreadRadius: 1, // Set spread radius
+                blurRadius: 7, // Set blur radius
+                offset: const Offset(0, 3), // Set offset
+              ),
+            ],
+            borderRadius: BorderRadius.circular(
+                5), // Set the same border radius as the OutlineInputBorder
+          ),
+          child: TextFormField(
+            keyboardType: type,
+            obscureText: hideText,
+            validator: validator,
+            controller: controller,
+            decoration: InputDecoration(
+              contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+              fillColor: Colors.white,
+              filled: true,
+              hintText: hint,
+              prefixIcon: icon,
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ), // Set border color to primary color
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+              ),
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor,
+                ), // Set border color to primary color with opacity
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+              ),
             ),
           ),
         ),

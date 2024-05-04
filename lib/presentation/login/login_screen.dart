@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:parkinson_app/presentation/custom_widgets/auth_widget.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_elevated_buttom.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_text_form_field.dart';
-import 'package:parkinson_app/presentation/doctor_data_collection/doctor_data_collection_screen.dart';
+import 'package:parkinson_app/presentation/doctor_home/app_bar_bottom_nav_bar.dart';
 import 'package:parkinson_app/presentation/forgot_password/forgot_password.dart';
 import 'package:parkinson_app/presentation/signup/signup_screen.dart';
 
@@ -87,8 +87,8 @@ class LoginScreen extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: CustomElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(context,
-                                    DoctorDataCollectionScreen.screenName);
+                                Navigator.pushReplacementNamed(
+                                    context, AppBarAndBottomNav.screenName);
                               },
                               label: 'Login'),
                         ),

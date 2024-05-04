@@ -11,14 +11,15 @@ class CustomHomeCategory extends StatelessWidget {
     var size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: size.height * .12,
+      height: size.height * .14,
       width: size.width * .45,
       child: Container(
         decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
             borderRadius: const BorderRadius.all(Radius.circular(15))),
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(
+              horizontal: size.width * .02, vertical: size.height * .02),
           child: Column(
             children: [
               ImageIcon(

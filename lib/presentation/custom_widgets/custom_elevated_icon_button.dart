@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
-class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
+class CustomElevatedIconButton extends StatelessWidget {
+  const CustomElevatedIconButton({
     Key? key,
     required this.onPressed,
     required this.label,
+    required this.icon,
   }) : super(key: key);
 
   final VoidCallback onPressed;
   final String label;
+  final Widget icon;
 
   @override
   Widget build(BuildContext context) {
@@ -33,23 +35,26 @@ class CustomElevatedButton extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(15),
         ),
-        child: ElevatedButton(
-          
+        child: ElevatedButton.icon(
           onPressed: onPressed,
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 25),
-            backgroundColor: Colors.transparent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-            ), // Set the button's color to transparent
-            elevation: 0, // Remove any elevation shadow
-          ),
-          child: Text(
+          icon: icon,
+          label: Text(
             label,
             style: Theme.of(context)
                 .textTheme
                 .titleLarge
                 ?.copyWith(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor:
+                Colors.transparent, // Set button's color to transparent
+            elevation: 0, // Remove any elevation shadow
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 30), // Add padding around the label and icon
           ),
         ),
       ),

@@ -83,7 +83,10 @@ class SignUpScreen extends StatelessWidget {
                           height: height * .04,
                         ),
                         CustomElevatedButton(
-                            onPressed: login, label: 'Sign Up'),
+                            onPressed: () {
+                              signUp(context);
+                            },
+                            label: 'Sign Up'),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: height * .02),
                           child: Row(
@@ -123,8 +126,9 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  void login() async {
+  void signUp(BuildContext context) async {
     if (formKey.currentState?.validate() == false) {
+      Navigator.pushReplacementNamed(context, LoginScreen.screenName);
       return;
     }
   }

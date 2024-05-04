@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_elevated_buttom.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_text_form_field.dart';
+import 'package:parkinson_app/presentation/login/login_screen.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
   ChangePasswordScreen({super.key});
@@ -61,7 +62,10 @@ class ChangePasswordScreen extends StatelessWidget {
                     height: size.height * .02,
                   ),
                   CustomElevatedButton(
-                      onPressed: () {}, label: 'Reset Password')
+                      onPressed: () {
+                        Navigator.pushNamed(context, LoginScreen.screenName);
+                      },
+                      label: 'Reset Password')
                 ],
               ),
             ),
