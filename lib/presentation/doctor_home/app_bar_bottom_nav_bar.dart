@@ -6,7 +6,7 @@ import 'package:parkinson_app/presentation/predict/predict_screen_before_add_pat
 import 'package:parkinson_app/presentation/profile/profile_screen.dart';
 
 class AppBarAndBottomNav extends StatefulWidget {
-  const AppBarAndBottomNav({super.key}); 
+  const AppBarAndBottomNav({super.key});
   static const String screenName = "doctorHomeScreen";
 
   @override
@@ -20,9 +20,15 @@ class _AppBarAndBottomNavState extends State<AppBarAndBottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(_title),
+        appBar: PreferredSize(
+          preferredSize: currentIndex == 0
+              ? const Size.fromHeight(20.0)
+              : const Size.fromHeight(
+                  60.0), // Adjust the preferred size based on currentIndex
+          child: AppBar(
+            elevation: 0,
+            title: Text(_title),
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
             currentIndex: currentIndex,
@@ -74,7 +80,7 @@ class _AppBarAndBottomNavState extends State<AppBarAndBottomNav> {
   }
 
   List<Widget> tabs = [
-    const HomeScreen(),
+    HomeScreen(),
     const EditScreen(),
     const PredictScreenBeforeAddingPatient(),
     const AppointmentsScreen(),
