@@ -37,9 +37,10 @@ class MyApp extends StatelessWidget {
               create: (context) => SignUpViewModel(),
               child: const SignUpScreen(),
             ),
-        ForgotPassword.screenName: (context) => ForgotPassword(),
+        ForgotPassword.screenName: (context) => const ForgotPassword(),
         VerifyScreen.screenName: (context) => const VerifyScreen(),
-        ChangePasswordScreen.screenName: (context) => ChangePasswordScreen(),
+        ChangePasswordScreen.screenName: (context) =>
+            const ChangePasswordScreen(),
         DoctorDataCollectionScreen.screenName: (context) =>
             DoctorDataCollectionScreen(),
         AppBarAndBottomNav.screenName: (context) => const AppBarAndBottomNav(),

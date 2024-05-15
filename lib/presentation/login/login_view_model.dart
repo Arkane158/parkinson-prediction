@@ -14,12 +14,11 @@ class LoginViewModel extends Cubit<LoginState> {
       if (response.status == 200) {
         emit(HideLoadingState());
         emit(SuccessState("Login Successfully"));
-        print(response.userId);
       }
       if (response.status == 404) {
         emit(HideLoadingState());
 
-        emit(ErrorState(response.message ?? "Something Went Wrong"));
+        emit(ErrorState(response.message ));
       }
     } catch (e) {
       emit(HideLoadingState());
