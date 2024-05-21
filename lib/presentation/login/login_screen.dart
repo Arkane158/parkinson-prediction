@@ -4,6 +4,8 @@ import 'package:parkinson_app/presentation/custom_widgets/auth_widget.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_elevated_buttom.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_text_form_field.dart';
 import 'package:parkinson_app/presentation/custom_widgets/dialoge_utils.dart';
+import 'package:parkinson_app/presentation/doctor_data_collection/doctor_data_collection_screen.dart';
+import 'package:parkinson_app/presentation/doctor_home/app_bar_bottom_nav_bar.dart';
 import 'package:parkinson_app/presentation/forgot_password/forgot_password.dart';
 import 'package:parkinson_app/presentation/login/login_view_model.dart';
 import 'package:parkinson_app/presentation/signup/signup_screen.dart';
@@ -110,7 +112,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             } else if (state is SuccessState) {
                               DialogeUtils.showMessage(
                                   context, "Login Successful",
-                                  posActionTitle: 'Ok');
+                                  posActionTitle: 'Ok', posAction: () {
+                                if (state.firstTime == false) {
+                                  Navigator.pushReplacementNamed(context,
+                                      DoctorDataCollectionScreen.screenName,
+                                      arguments: _emailController.text);
+                                }
+                                if (state.firstTime == true) {
+                                  Navigator.pushReplacementNamed(
+                                      context, AppBarAndBottomNav.screenName);
+                                }
+                              });
                             } else if (state is HideLoadingState) {
                               Navigator.pop(context);
                             }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:parkinson_app/presentation/signup/sign_up_view_model.dart';
+import 'package:parkinson_app/presentation/edit/edit_patient_info/edit_patient_info_screen.dart';
 import 'package:parkinson_app/presentation/signup/signup_screen.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parkinson_app/presentation/add_patient/add_patient_screen.dart';
 import 'package:parkinson_app/presentation/appointments/appointments_screen.dart';
 import 'package:parkinson_app/presentation/change_password/change_password_screen.dart';
@@ -33,16 +32,13 @@ class MyApp extends StatelessWidget {
       initialRoute: LoginScreen.screenName,
       routes: {
         LoginScreen.screenName: (context) => const LoginScreen(),
-        SignUpScreen.screenName: (context) => BlocProvider<SignUpViewModel>(
-              create: (context) => SignUpViewModel(),
-              child: const SignUpScreen(),
-            ),
+        SignUpScreen.screenName: (context) => const SignUpScreen(),
         ForgotPassword.screenName: (context) => const ForgotPassword(),
         VerifyScreen.screenName: (context) => const VerifyScreen(),
         ChangePasswordScreen.screenName: (context) =>
             const ChangePasswordScreen(),
         DoctorDataCollectionScreen.screenName: (context) =>
-            DoctorDataCollectionScreen(),
+            const DoctorDataCollectionScreen(),
         AppBarAndBottomNav.screenName: (context) => const AppBarAndBottomNav(),
         ProfileScreen.screenName: (context) => const ProfileScreen(),
         EditScreen.screenName: (context) => const EditScreen(),
@@ -55,6 +51,8 @@ class MyApp extends StatelessWidget {
         EditAccount.screenName: (context) => const EditAccount(),
         PrivacyPolicyScreen.screenName: (context) =>
             const PrivacyPolicyScreen(),
+        EditPatientInfoScreen.screenName: (context) =>
+            const EditPatientInfoScreen()
       },
     );
   }

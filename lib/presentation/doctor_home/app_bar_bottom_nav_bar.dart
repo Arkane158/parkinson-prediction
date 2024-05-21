@@ -26,6 +26,7 @@ class _AppBarAndBottomNavState extends State<AppBarAndBottomNav> {
               : const Size.fromHeight(
                   60.0), // Adjust the preferred size based on currentIndex
           child: AppBar(
+            automaticallyImplyLeading: false,
             elevation: 0,
             title: Text(_title),
           ),
@@ -80,7 +81,7 @@ class _AppBarAndBottomNavState extends State<AppBarAndBottomNav> {
   }
 
   List<Widget> tabs = [
-    HomeScreen(),
+    const HomeScreen(),
     const EditScreen(),
     const PredictScreenBeforeAddingPatient(),
     const AppointmentsScreen(),

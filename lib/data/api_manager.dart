@@ -1,12 +1,23 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:http_parser/http_parser.dart';
+import 'package:parkinson_app/data/request/add_patinet_request.dart';
+import 'package:parkinson_app/data/request/delete_patient_request.dart';
+import 'package:parkinson_app/data/request/edit_patient_request.dart';
 import 'package:parkinson_app/data/request/forgot_password_request.dart';
+import 'package:parkinson_app/data/request/patient_list_request.dart';
 import 'package:parkinson_app/data/request/reset_password_request.dart';
 import 'package:parkinson_app/data/request/sign_request.dart';
 import 'package:parkinson_app/data/request/sign_up_request.dart';
 import 'package:parkinson_app/data/request/verification_request.dart';
 import 'package:parkinson_app/data/request/verify_reset_password_request.dart';
+import 'package:parkinson_app/data/response/add_patient_response.dart';
+import 'package:parkinson_app/data/response/delete_patient_response.dart';
+import 'package:parkinson_app/data/response/doctor_data_collection_response.dart';
+import 'package:parkinson_app/data/response/edit_patient_response.dart';
 import 'package:parkinson_app/data/response/forgot_password_response.dart';
+import 'package:parkinson_app/data/response/get_patient_list_rseponse.dart';
 import 'package:parkinson_app/data/response/reset_password_response.dart';
 import 'package:parkinson_app/data/response/sigin_response.dart';
 import 'package:parkinson_app/data/response/sign_up_response.dart';
@@ -22,13 +33,18 @@ class ApiManager {
   static const String forgotPasswordUl = '/forget-password';
   static const String verifyResetPasswordUl = '/Verify-code';
   static const String resetPasswordUl = '/reset-password';
+  static const String doctorDataCollectionUrl = '/profile';
+  static const String addPatientUrl = '/addPateint';
+  static const String getPatientListUrl = '/patientList';
+  static const String deletePatientUrl = '/deletePateint';
+  static const String editPatientUrl = '/editPateint';
 
-  static Future<SignUpResponse> signUpRequset(
-    String email,
-    String password,
-    String name,
-    String phone,
-  ) async {
+  static Future<SignUpResponse> signUpRequset({
+    required String email,
+    required String password,
+    required String name,
+    required String phone,
+  }) async {
     var requestBody = SignUpRequest(
         password: password, email: email, phone: phone, name: name);
     try {
@@ -79,5 +95,112 @@ class ApiManager {
     var url = Uri.https(baseUrl, signInUrl);
     var response = await http.post(url, body: requestBody.toJson());
     return SignInResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<DoctorDataCollectionResponse> doctorDataCollection({
+    required String userId,
+    required File image,
+    required String name,
+    required String phone,
+    required String address,
+    required String workdays,
+    required String startTime,
+    required String endTime,
+    required String step,
+  }) async {
+    try {
+      // Create a multipart request
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse("https://parkinson-9ek4.onrender.com/profile"),
+      );
+
+      // Add fields to the request
+      request.fields['userId'] = userId; // Adding userId field
+      request.fields['name'] = name;
+      request.fields['phone'] = phone;
+      request.fields['address'] = address;
+      request.fields['workdays'] = workdays;
+      request.fields['startTime'] = startTime;
+      request.fields['endTime'] = endTime;
+      request.fields['step'] = step;
+
+      // Add the image file to the request
+      var imageStream = http.ByteStream(image.openRead());
+      var length = await image.length();
+      var multipartFile = http.MultipartFile(
+        'image',
+        imageStream,
+        length,
+        filename: 'image.jpg',
+        contentType: MediaType('image', 'jpeg'),
+      );
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await request.send();
+
+      // Check if the request was successful (status code 200)
+      if (response.statusCode == 200) {
+        // Parse the response body into DoctorDataCollectionResponse object
+        var responseBody = await response.stream.bytesToString();
+        return DoctorDataCollectionResponse.fromJson(jsonDecode(responseBody));
+      } else {
+        // If the request was not successful, throw an exception
+        throw Exception('Failed to post data');
+      }
+    } catch (e) {
+      // If an error occurs during the request, throw an exception
+      throw Exception('Failed to post data: $e');
+    }
+  }
+
+  static Future<AddPatientResponse> addPatient(
+      {required String userId,
+      required String phone,
+      required String name,
+      required String age,
+      required String address,
+      required String gender}) async {
+    var requestBody = AddPatientRequest(
+        userId: userId,
+        phone: phone,
+        name: name,
+        age: age,
+        gender: gender,
+        address: address);
+    var url = Uri.https(baseUrl, addPatientUrl);
+    var response = await http.post(url, body: requestBody.toJson());
+    return AddPatientResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<GetPatientListResponse> getPatientList(
+      {required String userId}) async {
+    var requestBody = PatientListRequest(userId: userId);
+    var url = Uri.https(baseUrl, getPatientListUrl);
+    var response = await http.post(url, body: requestBody.toJson());
+    return GetPatientListResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<DeletePatientResponse> deletePatient(
+      String id, String userId) async {
+    var reqeustBody = DeletePatientRequest(id: id, userId: userId);
+    var url = Uri.https(baseUrl, deletePatientUrl);
+    var response = await http.post(url, body: reqeustBody.toJson());
+    return DeletePatientResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<EditPatientResponse> editPatient({required String name,required String age,
+     required String phone,required String address,required String gender,required String userId}) async {
+    var requestBody = EditPatientRequest(
+        id: userId,
+        phone: phone,
+        name: name,
+        age: age,
+        gender: gender,
+        address: address);
+    var url = Uri.https(baseUrl, editPatientUrl);
+    var response = await http.post(url, body: requestBody.toJson());
+    return EditPatientResponse.fromJson(jsonDecode(response.body));
   }
 }

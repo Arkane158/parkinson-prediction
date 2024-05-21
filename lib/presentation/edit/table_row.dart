@@ -1,38 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:parkinson_app/presentation/add_patient/add_patient_screen.dart';
 
 class TableRowWidget extends StatelessWidget {
-  const TableRowWidget({
-    Key? key,
-    required this.age,
-    required this.name,
-    required this.gender,
-    required this.patinet,
-  }) : super(key: key);
+  const TableRowWidget(
+      {Key? key,
+      required this.age,
+      required this.name,
+      required this.gender,
+      required this.patinet,
+      required this.deleteFun,
+      required this.editFun})
+      : super(key: key);
 
   final String name;
   final String gender;
   final String patinet;
   final String age;
+  final void Function(BuildContext)? deleteFun;
+  final void Function(BuildContext)? editFun;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 1),
       child: Slidable(
-        key: const ValueKey(0), // Specify a key if the Slidable is dismissible.
+        key: const ValueKey(0),
         startActionPane: ActionPane(
-          // The start action pane is the one at the left or the top side.
           motion: const ScrollMotion(),
-          dismissible: DismissiblePane(onDismissed: () {}),
           children: [
-            // Start actions
-
             SlidableAction(
-              onPressed: (_) {
-                // Add your delete action functionality here
-              },
+              onPressed: deleteFun,
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
               icon: Icons.delete,
@@ -40,14 +37,10 @@ class TableRowWidget extends StatelessWidget {
           ],
         ),
         endActionPane: ActionPane(
-          // The end action pane is the one at the right or the bottom side.
           motion: const ScrollMotion(),
           children: [
-            // End actions
             SlidableAction(
-              onPressed: (_) {
-                Navigator.pushNamed(context, AddPatientScreen.screenName);
-              },
+              onPressed: editFun,
               backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               icon: Icons.edit,
@@ -62,7 +55,10 @@ class TableRowWidget extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(name),
+                      child: Text(
+                        name,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
@@ -70,7 +66,10 @@ class TableRowWidget extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(gender),
+                      child: Text(
+                        gender,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
@@ -78,7 +77,10 @@ class TableRowWidget extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(patinet),
+                      child: Text(
+                        patinet,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),
@@ -86,7 +88,10 @@ class TableRowWidget extends StatelessWidget {
                   child: Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(age),
+                      child: Text(
+                        age,
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                   ),
                 ),

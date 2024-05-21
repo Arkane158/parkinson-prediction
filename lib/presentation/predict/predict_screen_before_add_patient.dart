@@ -10,38 +10,49 @@ class PredictScreenBeforeAddingPatient extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: size.width * .05),
-        child: Column(
-          children: [
-            const Image(image: AssetImage('assets/images/prediction_logo.png')),
-            Text(
-              'Welcome Doctor!',
-              textAlign: TextAlign.left,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            SizedBox(
-              height: size.height * .03,
-            ),
-            const Text(
-              "Please Add Patient So That You Can Make A Prediction",
-              textAlign: TextAlign.center,
-            ),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * .05),
+                child: Column(
+                  children: [
+                    const Image(
+                        image: AssetImage('assets/images/prediction_logo.png')),
+                    Text(
+                      'Welcome Doctor!',
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    SizedBox(
+                      height: size.height * .03,
+                    ),
+                    const Text(
+                      "Please Add Patient So That You Can Make A Prediction",
+                      textAlign: TextAlign.center,
+                    ),
 
-            // Container with Gradient
-            SizedBox(
-              height: size.height * .05,
+                    // Container with Gradient
+                    SizedBox(
+                      height: size.height * .05,
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: size.width * .03),
+                      child: CustomElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, AddPatientScreen.screenName);
+                          },
+                          label: 'Add Patient'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: size.width * .03),
-              child: CustomElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, AddPatientScreen.screenName);
-                  },
-                  label: 'Add Patient'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

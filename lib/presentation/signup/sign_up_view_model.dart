@@ -9,9 +9,8 @@ class SignUpViewModel extends Cubit<SignUpState> {
   void signUp(String name, String email, String password, String phone) async {
     try {
       emit(LoadingState());
-
-      var response =
-          await ApiManager.signUpRequset(email, password, name, phone);
+      var response = await ApiManager.signUpRequset(
+          email: email, password: password, name: name, phone: phone);
 
       if (response.status == 200) {
         emit(HideLoadingState());

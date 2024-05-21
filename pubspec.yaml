@@ -37,10 +37,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   pinput: ^3.0.1
   easy_date_timeline: ^1.0.5
-  flutter_slidable: ^3.0.1
+  flutter_slidable: ^3.1.0
   http: ^1.1.0
   flutter_bloc: ^8.1.5
   provider: ^6.1.2
+  day_picker: ^2.2.0
+  image_picker: ^1.0.8
+  http_parser: ^4.0.2
+  shared_preferences: ^2.2.3
+  cached_network_image: ^3.3.1
 
 dev_dependencies:
   flutter_test:

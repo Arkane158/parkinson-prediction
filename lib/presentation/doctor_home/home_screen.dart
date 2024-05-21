@@ -1,22 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:parkinson_app/prefrence/doctor_save_shared_prefrence.dart';
 import 'package:parkinson_app/presentation/doctor_home/custom_appointment_widget.dart';
-import 'package:parkinson_app/presentation/doctor_home/custom_home_category.dart';
 
-class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key});
-  final TextEditingController _searchController = TextEditingController();
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  State<HomeScreen> createState() =>
+      _HomeScreenState(); // Change _HomeScreenState to HomeScreenState
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? img; // Initialize to null
+
+  @override
+  void initState() {
+    super.initState();
+    loadImage();
+  }
+
+  Future<void> loadImage() async {
+    String? imageUrl = await DoctorPreference.getUserImg();
+    setState(() {
+      img = imageUrl != null && imageUrl.isNotEmpty
+          ? _getDirectImageUrl(imageUrl)
+          : null;
+    });
+  }
+
+  String _getDirectImageUrl(String driveLink) {
+    final regExp = RegExp(r'\/d\/(.*?)\/');
+    final match = regExp.firstMatch(driveLink);
+    if (match != null) {
+      final fileId = match.group(1);
+      return 'https://drive.google.com/uc?export=view&id=$fileId';
+    }
+    return driveLink; // Return the original link if it doesn't match the pattern
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
           children: [
             // Non-scrollable part
             Container(
-              height: size.height * .16,
+              height: size.height * .1,
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: const BorderRadius.only(
@@ -43,10 +75,25 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              CircleAvatar(
-                                minRadius: 1.0,
-                                child: Image.asset('assets/images/doctor.png'),
-                              ),
+                              if (img != null && img!.isNotEmpty)
+                                CircleAvatar(
+                                  radius: size.width * .05,
+                                  backgroundColor: Colors.transparent,
+                                  backgroundImage: img != null
+                                      ? CachedNetworkImageProvider(img!)
+                                      : null,
+                                  child: img == null
+                                      ? const Icon(Icons.person,
+                                          color: Colors.white)
+                                      : null,
+                                )
+                              else
+                                CircleAvatar(
+                                  radius: size.width * .05,
+                                  backgroundColor: Colors.grey,
+                                  child: const Icon(Icons.person,
+                                      color: Colors.white),
+                                ),
                               SizedBox(
                                 width: size.width * .025,
                               ),
@@ -63,32 +110,6 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: size.height * .02,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: size.width * .03),
-                    child: Material(
-                      borderRadius: const BorderRadius.all(Radius.circular(15)),
-                      elevation: 2,
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(
-                            Icons.search,
-                            color: Colors.black,
-                          ),
-                          contentPadding: EdgeInsets.all(size.height * .01),
-                          filled: true,
-                          border: const OutlineInputBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          hintText: 'Search',
-                          fillColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -109,117 +130,65 @@ class HomeScreen extends StatelessWidget {
                           width: size.width * .95,
                           child: Container(
                             decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                        'assets/images/doctorhome.png'))),
+                              image: DecorationImage(
+                                image:
+                                    AssetImage('assets/images/doctorhome.png'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                             child: Align(
                               alignment: Alignment.topLeft,
                               child: Padding(
                                 padding: EdgeInsets.symmetric(
-                                    vertical: size.height * .02,
-                                    horizontal: size.width * .03),
+                                  vertical: size.height * .02,
+                                  horizontal: size.width * .03,
+                                ),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
                                       'Welcome!',
                                       style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.white),
-                                      textAlign: TextAlign.left,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                    SizedBox(
-                                      height: size.height * .005,
-                                    ),
+                                    SizedBox(height: size.height * .005),
                                     const Text(
                                       'Thanks for joining with us \nyou can make prediction \nfor patient',
                                       style: TextStyle(
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal,
-                                          color: Colors.white),
-                                      textAlign: TextAlign.left,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                    SizedBox(
-                                      height: size.height * .01,
-                                    ),
+                                    SizedBox(height: size.height * .01),
                                     Container(
                                       decoration: BoxDecoration(
-                                          shape: BoxShape.rectangle,
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.elliptical(5, 5)),
-                                          color:
-                                              Theme.of(context).primaryColor),
+                                        shape: BoxShape.rectangle,
+                                        borderRadius: const BorderRadius.all(
+                                          Radius.elliptical(5, 5),
+                                        ),
+                                        color: Theme.of(context).primaryColor,
+                                      ),
                                       child: const Padding(
                                         padding: EdgeInsets.all(5),
                                         child: Text(
                                           'Predict',
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15),
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * .04),
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'categories',
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: size.height * .03),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomHomeCategory(
-                                  assetPath:
-                                      'assets/images/home_patient_icon.png',
-                                  label: 'Patients',
-                                ),
-                                CustomHomeCategory(
-                                  assetPath:
-                                      'assets/images/home_healthy_icon.png',
-                                  label: 'Healthy People',
-                                ),
-                              ],
-                            ),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                'Appointments ',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              Text(
-                                'See All ',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
                       ),
                     ),
                     Padding(
@@ -232,10 +201,10 @@ class HomeScreen extends StatelessWidget {
                           const CustomAppointmentWidget(),
                           SizedBox(
                             height: size.height * .04,
-                          )
+                          ),
                         ],
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
