@@ -12,7 +12,6 @@ class EditViewModel extends Cubit<EditState> {
   void getPatientList() async {
     patients = [];
 
-    print(patients);
     try {
       emit(LoadingState());
       String? userId = await DoctorPreference.getUserId();
@@ -21,7 +20,6 @@ class EditViewModel extends Cubit<EditState> {
 
       if (response.status == 200) {
         patients = response.result; // Update patients list
-        print(patients[0].address);
         emit(SuccessState("Patient list fetched successfully"));
       } else {
         emit(ErrorState("Failed to fetch patient list"));

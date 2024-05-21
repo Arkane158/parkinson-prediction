@@ -17,33 +17,35 @@ class EditPatientInfoScreen extends StatefulWidget {
 
 class _EditPatientInfoScreenState extends State<EditPatientInfoScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // Form key
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _phoneController = TextEditingController();
-
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-
-  // final TextEditingController _addressController = TextEditingController();
 
   String? gender;
   final EditPatientInfoViewModel viewModel = EditPatientInfoViewModel();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final Patient patient =
+          ModalRoute.of(context)!.settings.arguments as Patient;
+      gender = patient.gender;
+      _nameController.text = patient.name;
+      _phoneController.text = patient.phone;
+      _ageController.text = patient.age;
+      _addressController.text = patient.address!;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    Patient patient = ModalRoute.of(context)!.settings.arguments as Patient;
-
-    gender = patient.gender;
-    _nameController.text = patient.name;
-    _phoneController.text = patient.phone;
-    _ageController.text = patient.age;
-    _addressController.text = patient.address!;
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 248, 245, 245),
-      appBar: AppBar(title: const Text('Edit Patient ')),
+      appBar: AppBar(title: const Text('Edit Patient')),
       body: BlocProvider(
         create: (context) => viewModel,
         child: Column(
@@ -51,13 +53,14 @@ class _EditPatientInfoScreenState extends State<EditPatientInfoScreen> {
             Expanded(
               child: SingleChildScrollView(
                 child: Form(
-                  key: _formKey, // Assign the form key
+                  key: _formKey,
                   child: Column(
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            vertical: size.height * .03,
-                            horizontal: size.width * .03),
+                          vertical: size.height * .03,
+                          horizontal: size.width * .03,
+                        ),
                         child: Column(
                           children: [
                             CustomTextFormField(
@@ -114,105 +117,66 @@ class _EditPatientInfoScreenState extends State<EditPatientInfoScreen> {
                               },
                             ),
                             SizedBox(height: size.height * .03),
-                            // Row(
-                            //   children: [
-                            //     Flexible(
-                            //       flex: 1,
-                            //       child: Text(
-                            //         'Gender',
-                            //         style: Theme.of(context)
-                            //             .textTheme
-                            //             .headlineSmall
-                            //             ?.copyWith(fontSize: 14),
-                            //       ),
-                            //     ),
-                            //     Flexible(
-                            //       flex: 3,
-                            //       child: RadioListTile(
-                            //         title: const Text(
-                            //           'Male',
-                            //           style: TextStyle(fontSize: 15),
-                            //         ),
-                            //         value: 'male',
-                            //         groupValue: gender,
-                            //         activeColor: Theme.of(context).primaryColor,
-                            //         onChanged: (value) {
-                            //           setState(() {
-                            //             gender = value.toString();
-                            //           });
-                            //         },
-                            //       ),
-                            //     ),
-                            //     Flexible(
-                            //       flex: 3,
-                            //       child: RadioListTile(
-                            //         title: const Text(
-                            //           'Female',
-                            //           style: TextStyle(fontSize: 15),
-                            //         ),
-                            //         value: 'female',
-                            //         groupValue: gender,
-                            //         activeColor: Theme.of(context).primaryColor,
-                            //         onChanged: (value) {
-                            //           setState(() {
-                            //             gender = value.toString();
-                            //           });
-                            //         },
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
-                            SizedBox(height: size.height * .02),
                             BlocConsumer<EditPatientInfoViewModel,
-                                    EditPatientInfoState>(
-                                listener: (context, state) {
-                              if (state is LoadingState) {
-                                DialogeUtils.showProgressDialog(
-                                    context, 'Loading...');
-                              } else if (state is ErrorState) {
-                                DialogeUtils.showMessage(
-                                    context, state.errorMessage,
-                                    posActionTitle: 'Ok');
-                              } else if (state is SuccessState) {
-                                DialogeUtils.showMessage(context, state.message,
-                                    posActionTitle: 'Ok', posAction: () {
-                                  Navigator.pushReplacementNamed(
-                                      context, AppBarAndBottomNav.screenName);
-                                });
-                              } else if (state is HideLoadingState) {
-                                Navigator.pop(context);
-                              }
-                            }, builder: (context, state) {
-                              return CustomElevatedIconButton(
+                                EditPatientInfoState>(
+                              listener: (context, state) {
+                                if (state is LoadingState) {
+                                  DialogeUtils.showProgressDialog(
+                                      context, 'Loading...');
+                                } else if (state is ErrorState) {
+                                  DialogeUtils.showMessage(
+                                    context,
+                                    state.errorMessage,
+                                    posActionTitle: 'Ok',
+                                  );
+                                } else if (state is SuccessState) {
+                                  DialogeUtils.showMessage(
+                                    context,
+                                    state.message,
+                                    posActionTitle: 'Ok',
+                                    posAction: () {
+                                      Navigator.pushReplacementNamed(context,
+                                          AppBarAndBottomNav.screenName);
+                                    },
+                                  );
+                                } else if (state is HideLoadingState) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                              builder: (context, state) {
+                                return CustomElevatedIconButton(
                                   onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                      // Form is valid, proceed with prediction
-                                      // You can access form field values using controllers
                                       DialogeUtils.showMessage(
                                         context,
-                                        'Are You sure you want to Edit ?',
+                                        'Are You sure you want to Edit?',
                                         posActionTitle: 'Yes',
                                         posAction: () {
+                                          final Patient patient =
+                                              ModalRoute.of(context)!
+                                                  .settings
+                                                  .arguments as Patient;
                                           viewModel.editPatient(
-                                              patient.id,
-                                              _nameController.text,
-                                              _phoneController.text,
-                                              _ageController.text,
-                                              _addressController.text,
-                                              patient.gender);
+                                            patient.id,
+                                            _nameController.text,
+                                            _phoneController.text,
+                                            _ageController.text,
+                                            _addressController.text,
+                                            gender!,
+                                          );
                                         },
                                         negActionTitle: 'No',
                                         negAction: () {
                                           Navigator.pop(context);
                                         },
                                       );
-
-                                      // Navigate to the prediction screen if needed
                                     }
                                   },
                                   label: 'Edit Patient Information',
-                                  icon: const Icon(Icons.edit));
-                            }),
+                                  icon: const Icon(Icons.edit),
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
