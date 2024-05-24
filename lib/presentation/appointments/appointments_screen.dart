@@ -1,115 +1,91 @@
-import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:parkinson_app/presentation/appointments/appointment_item.dart';
+import 'package:parkinson_app/presentation/appointments/appointments_view_model.dart';
 
-class AppointmentsScreen extends StatelessWidget {
+class AppointmentsScreen extends StatefulWidget {
   static const String screenName = "appointments";
-  const AppointmentsScreen({super.key});
+
+  const AppointmentsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AppointmentsScreen> createState() => _AppointmentsScreenState();
+}
+
+class _AppointmentsScreenState extends State<AppointmentsScreen> {
+  late AppointmentViewModel viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel = AppointmentViewModel();
+    viewModel.getAppointment(); // Initial fetch
+  }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        EasyDateTimeLine(
-          initialDate: DateTime.now(),
-          onDateChange: (selectedDate) {
-            //`selectedDate` the new date selected.
-          },
-          activeColor: Theme.of(context).primaryColor,
-          dayProps: EasyDayProps(
-            inactiveDayStyle: DayStyle(
-                dayNumStyle: const TextStyle(
+    return Scaffold(
+      body: BlocProvider(
+        create: (context) => viewModel,
+        child: Column(
+          children: [
+            EasyDateTimeLine(
+              initialDate: DateTime.now(),
+              onDateChange: (selectedDate) {
+                setState(() {
+                  viewModel.setSelectedDate(selectedDate);
+                  viewModel
+                      .getAppointment(); // Fetch appointments for selected date
+                });
+              },
+              activeColor: Theme.of(context).primaryColor,
+              dayProps: EasyDayProps(
+                inactiveDayStyle: DayStyle(
+                  dayNumStyle: const TextStyle(
                     color: Color(0xff888888),
                     fontWeight: FontWeight.w800,
-                    fontSize: 20),
-                decoration: BoxDecoration(
+                    fontSize: 20,
+                  ),
+                  decoration: BoxDecoration(
                     color: const Color(0xffE0E0E0),
-                    borderRadius: BorderRadius.circular(10))),
-            landScapeMode: true,
-            activeDayStyle: const DayStyle(
-              borderRadius: 25,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                landScapeMode: true,
+                activeDayStyle: const DayStyle(
+                  borderRadius: 25,
+                ),
+                dayStructure: DayStructure.dayStrDayNum,
+              ),
+              headerProps: const EasyHeaderProps(
+                dateFormatter: DateFormatter.fullDateDMonthAsStrY(),
+              ),
             ),
-            dayStructure: DayStructure.dayStrDayNum,
-          ),
-          headerProps: const EasyHeaderProps(
-            dateFormatter: DateFormatter.fullDateDMonthAsStrY(),
-          ),
+            Expanded(
+              child: BlocBuilder<AppointmentViewModel, AppointmentState>(
+                builder: (context, state) {
+                  if (state is LoadingState) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ErrorState) {
+                    return Center(child: Text(state.errorMessage));
+                  } else if (state is SuccessState) {
+                    return ListView.builder(
+                      itemCount: viewModel.appointments.length,
+                      itemBuilder: (context, index) {
+                        final appointment = viewModel.appointments[index];
+                        return AppointmentItem(appointment: appointment);
+                      },
+                    );
+                  } else {
+                    return const Center(child: Text('No appointments found'));
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              vertical: size.height * .02, horizontal: size.width * .02),
-          child: Table(
-            children: [
-              const TableRow(
-                children: [
-                  TableCell(child: Center(child: Text('Name'))),
-                  TableCell(child: Center(child: Text('Time'))),
-                ],
-              ),
-              TableRow(
-                children: [
-                  TableCell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/images/patient_ex1.png'),
-                          ),
-                          SizedBox(width: size.width * .05),
-                          const Text('John Doe'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  TableCell(
-                    child: Center(
-                        child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.width * .02,
-                          vertical: size.height * .03),
-                      child: const Text(
-                        '9:00 AM',
-                        textAlign: TextAlign.center,
-                      ),
-                    )),
-                  ),
-                ],
-              ),
-              TableRow(
-                children: [
-                  TableCell(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const CircleAvatar(
-                            backgroundImage:
-                                AssetImage('assets/images/patient_ex1.png'),
-                          ),
-                          SizedBox(width: size.width * .05),
-                          const Text('Jane Smith'),
-                        ],
-                      ),
-                    ),
-                  ),
-                  TableCell(
-                    child: Center(
-                        child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: size.width * .02,
-                          vertical: size.height * .03),
-                      child: const Text('10:30 AM'),
-                    )),
-                  ),
-                ],
-              ),
-              // Add more rows as needed
-            ],
-          ),
-        )
-      ],
+      ),
     );
   }
 }

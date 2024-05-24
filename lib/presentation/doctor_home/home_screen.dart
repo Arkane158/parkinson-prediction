@@ -1,52 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parkinson_app/prefrence/doctor_save_shared_prefrence.dart';
+import 'package:parkinson_app/presentation/add_patient/add_patient_screen.dart';
 import 'package:parkinson_app/presentation/doctor_home/custom_appointment_widget.dart';
+import 'package:parkinson_app/presentation/doctor_home/home_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() =>
-      _HomeScreenState(); // Change _HomeScreenState to HomeScreenState
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? img; // Initialize to null
+  String? img;
+  String? name;
+  HomeViewModel viewModel = HomeViewModel();
 
   @override
   void initState() {
     super.initState();
     loadImage();
+    viewModel.getAppointment();
   }
 
   Future<void> loadImage() async {
     String? imageUrl = await DoctorPreference.getUserImg();
+    String? doctorName = await DoctorPreference.getUserName();
+    name = doctorName;
     setState(() {
       img = imageUrl != null && imageUrl.isNotEmpty
-          ? _getDirectImageUrl(imageUrl)
+          ? convertDriveLink(imageUrl)
           : null;
     });
   }
 
-  String _getDirectImageUrl(String driveLink) {
-    final regExp = RegExp(r'\/d\/(.*?)\/');
-    final match = regExp.firstMatch(driveLink);
-    if (match != null) {
-      final fileId = match.group(1);
-      return 'https://drive.google.com/uc?export=view&id=$fileId';
-    }
-    return driveLink; // Return the original link if it doesn't match the pattern
+  String convertDriveLink(String originalLink) {
+    String fileId = originalLink.substring(
+        originalLink.indexOf('/d/') + 3, originalLink.indexOf('/view'));
+
+    return 'https://drive.google.com/uc?id=$fileId&export=download';
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
     return Scaffold(
-      body: SingleChildScrollView(
+      body: BlocProvider(
+        create: (context) => viewModel,
         child: Column(
           children: [
-            // Non-scrollable part
             Container(
               height: size.height * .1,
               decoration: BoxDecoration(
@@ -63,60 +68,48 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * .02),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              if (img != null && img!.isNotEmpty)
-                                CircleAvatar(
-                                  radius: size.width * .05,
-                                  backgroundColor: Colors.transparent,
-                                  backgroundImage: img != null
-                                      ? CachedNetworkImageProvider(img!)
-                                      : null,
-                                  child: img == null
-                                      ? const Icon(Icons.person,
-                                          color: Colors.white)
-                                      : null,
-                                )
-                              else
-                                CircleAvatar(
-                                  radius: size.width * .05,
-                                  backgroundColor: Colors.grey,
-                                  child: const Icon(Icons.person,
-                                      color: Colors.white),
-                                ),
-                              SizedBox(
-                                width: size.width * .025,
-                              ),
-                              Text(
-                                'Ali Mohamed',
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: size.width * .02),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        if (img != null && img!.isNotEmpty)
+                          CircleAvatar(
+                            radius: size.width * .08,
+                            backgroundColor: Colors.transparent,
+                            backgroundImage: img != null
+                                ? CachedNetworkImageProvider(img!)
+                                : null,
+                            child: img == null
+                                ? const Icon(Icons.person, color: Colors.white)
+                                : null,
+                          )
+                        else
+                          CircleAvatar(
+                            radius: size.width * .05,
+                            backgroundColor: Colors.grey,
+                            child:
+                                const Icon(Icons.person, color: Colors.white),
+                          ),
+                        SizedBox(width: size.width * .025),
+                        name == null
+                            ? const CircularProgressIndicator()
+                            : Text(
+                                name!,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleSmall
                                     ?.copyWith(color: Colors.white),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-
-            // Scrollable part
-            SizedBox(
-              height: size.height * 0.84, // Adjust the height as needed
+            Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -130,6 +123,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: size.width * .95,
                           child: Container(
                             decoration: const BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(25)),
                               image: DecorationImage(
                                 image:
                                     AssetImage('assets/images/doctorhome.png'),
@@ -164,21 +159,25 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ),
                                     ),
                                     SizedBox(height: size.height * .01),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.rectangle,
-                                        borderRadius: const BorderRadius.all(
-                                          Radius.elliptical(5, 5),
+                                    InkWell(
+                                      onTap: () => Navigator.pushNamed(
+                                          context, AddPatientScreen.screenName),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: const BorderRadius.all(
+                                            Radius.elliptical(10, 15),
+                                          ),
+                                          color: Theme.of(context).primaryColor,
                                         ),
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      child: const Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: Text(
-                                          'Predict',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15,
+                                        child: const Padding(
+                                          padding: EdgeInsets.all(5),
+                                          child: Text(
+                                            'Predict',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -191,19 +190,49 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: size.width * .03),
-                      child: Column(
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const CustomAppointmentWidget(),
-                          const CustomAppointmentWidget(),
-                          const CustomAppointmentWidget(),
-                          SizedBox(
-                            height: size.height * .04,
+                          Text(
+                            'Appointments : ',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w600),
                           ),
                         ],
                       ),
+                    ),
+                    BlocBuilder<HomeViewModel, HomeState>(
+                      builder: (context, state) {
+                        if (state is LoadingState) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (state is ErrorState) {
+                          return Center(child: Text(state.errorMessage));
+                        } else if (state is SuccessState) {
+                          // Only show the first 5 appointments
+                          final appointmentsToShow =
+                              viewModel.appointments.take(5).toList();
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: appointmentsToShow.length,
+                            itemBuilder: (context, index) {
+                              final appointment = appointmentsToShow[index];
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: CustomAppointmentWidget(
+                                    appointment: appointment),
+                              );
+                            },
+                          );
+                        } else {
+                          return const Center(
+                              child: Text('No appointments found'));
+                        }
+                      },
                     ),
                   ],
                 ),

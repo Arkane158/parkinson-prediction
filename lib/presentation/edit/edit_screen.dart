@@ -1,3 +1,4 @@
+// EditScreen Widget
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:parkinson_app/presentation/add_patient/add_patient_screen.dart';
@@ -25,6 +26,21 @@ class _EditScreenState extends State<EditScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       viewModel.getPatientList();
     });
+
+    // Add a listener to the search controller
+    _searchController.addListener(() {
+      if (_searchController.text.isEmpty) {
+        viewModel.getPatientList();
+      } else {
+        viewModel.findPatient(_searchController.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -153,7 +169,6 @@ class _EditScreenState extends State<EditScreen> {
                                           posActionTitle: 'Ok',
                                           posAction: () {
                                             setState(() {
-                                              print(patient.id);
                                               viewModel
                                                   .deletePatient(patient.id);
                                             });

@@ -11,11 +11,20 @@ class LoginViewModel extends Cubit<LoginState> {
       emit(LoadingState());
 
       var response = await ApiManager.signIn(email, password);
-      print(response.doctor!.img);
 
       if (response.status == 200) {
         emit(HideLoadingState());
-        if (response.profileCheck == false && response.doctor != null) {
+        // var doctor = response.doctor;
+        // print(doctor?.address);
+        // print(email);
+        // print(doctor?.endTime);
+        // print(doctor?.startTime);
+        // print(doctor?.step);
+        // print(doctor?.name);
+        // print(doctor?.workdays);
+        // print(doctor?.phone);
+
+        if (response.doctor?.phone != null) {
           var doctor = response.doctor;
           await DoctorPreference.saveUserData(
             email: email,
@@ -27,8 +36,9 @@ class LoginViewModel extends Cubit<LoginState> {
             endTime: doctor.endTime!,
             step: doctor.step!,
           );
-          print(doctor.img);
-          await DoctorPreference.saveUserImg(img: doctor.img!);
+        }
+        if (response.doctor?.img != null) {
+          await DoctorPreference.saveUserImg(img: response.doctor!.img!);
         }
 
         await DoctorPreference.saveUserId(id: response.userId);

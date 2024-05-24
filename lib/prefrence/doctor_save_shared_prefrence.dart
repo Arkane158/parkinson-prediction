@@ -34,6 +34,23 @@ class DoctorPreference {
     await prefs.setString(_keyStep, step);
   }
 
+  static Future<void> saveUserImg({required String img}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyImg, img);
+  }
+
+  static Future<String?> getUserImg() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? img = prefs.getString(_keyImg);
+    return img;
+  }
+
+  static Future<String?> getUserName() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? name = prefs.getString(_keyName);
+    return name;
+  }
+
   static Future<void> saveUserId({
     required String id,
   }) async {
@@ -50,7 +67,8 @@ class DoctorPreference {
 
   static Future<String?> getUserEmail() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyEmail);
+    String? email = prefs.getString(_keyEmail);
+    return email;
   }
 
   static Future<void> saveEditProfileId({
@@ -65,37 +83,9 @@ class DoctorPreference {
     return prefs.getString(_editUserProfileId);
   }
 
-  static Future<void> saveUserImg({
-    required String img,
-  }) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyImg, img);
-  }
-
-  static Future<String?> getUserImg() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_keyImg);
-  }
-
   static Future<String?> getUserId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_keyId);
-  }
-
-  static Future<Map<String, String?>> getUserData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return {
-      _keyId: prefs.getString(_keyId),
-      _keyEmail: prefs.getString(_keyEmail),
-      _keyPhone: prefs.getString(_keyPhone),
-      _keyName: prefs.getString(_keyName),
-      _keyImg: prefs.getString(_keyImg),
-      _keyAddress: prefs.getString(_keyAddress),
-      _keyWorkdays: prefs.getString(_keyWorkdays),
-      _keyStartTime: prefs.getString(_keyStartTime),
-      _keyEndTime: prefs.getString(_keyEndTime),
-      _keyStep: prefs.getString(_keyStep),
-    };
   }
 
   static Future<void> clearUserData() async {

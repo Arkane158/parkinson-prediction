@@ -6,7 +6,9 @@ import 'package:parkinson_app/presentation/predict/predict_screen_before_add_pat
 import 'package:parkinson_app/presentation/profile/profile_screen.dart';
 
 class AppBarAndBottomNav extends StatefulWidget {
-  const AppBarAndBottomNav({super.key});
+  const AppBarAndBottomNav({
+    super.key,
+  });
   static const String screenName = "doctorHomeScreen";
 
   @override

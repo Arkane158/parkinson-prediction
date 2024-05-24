@@ -3,8 +3,11 @@ import 'dart:io';
 
 import 'package:http_parser/http_parser.dart';
 import 'package:parkinson_app/data/request/add_patinet_request.dart';
+import 'package:parkinson_app/data/request/appointment_request.dart';
 import 'package:parkinson_app/data/request/delete_patient_request.dart';
 import 'package:parkinson_app/data/request/edit_patient_request.dart';
+import 'package:parkinson_app/data/request/edit_profile_request.dart';
+import 'package:parkinson_app/data/request/find_patient_request.dart';
 import 'package:parkinson_app/data/request/forgot_password_request.dart';
 import 'package:parkinson_app/data/request/patient_list_request.dart';
 import 'package:parkinson_app/data/request/reset_password_request.dart';
@@ -13,9 +16,12 @@ import 'package:parkinson_app/data/request/sign_up_request.dart';
 import 'package:parkinson_app/data/request/verification_request.dart';
 import 'package:parkinson_app/data/request/verify_reset_password_request.dart';
 import 'package:parkinson_app/data/response/add_patient_response.dart';
+import 'package:parkinson_app/data/response/appointment_response.dart';
 import 'package:parkinson_app/data/response/delete_patient_response.dart';
 import 'package:parkinson_app/data/response/doctor_data_collection_response.dart';
 import 'package:parkinson_app/data/response/edit_patient_response.dart';
+import 'package:parkinson_app/data/response/edit_profile_response.dart';
+import 'package:parkinson_app/data/response/find_patient_response.dart';
 import 'package:parkinson_app/data/response/forgot_password_response.dart';
 import 'package:parkinson_app/data/response/get_patient_list_rseponse.dart';
 import 'package:parkinson_app/data/response/reset_password_response.dart';
@@ -38,6 +44,9 @@ class ApiManager {
   static const String getPatientListUrl = '/patientList';
   static const String deletePatientUrl = '/deletePateint';
   static const String editPatientUrl = '/editPateint';
+  static const String findPatientUrl = '/findPatient';
+  static const String editProfileUrl = '/edit-profile';
+  static const String appointmentUrl = '/apoinmments';
 
   static Future<SignUpResponse> signUpRequset({
     required String email,
@@ -190,8 +199,13 @@ class ApiManager {
     return DeletePatientResponse.fromJson(jsonDecode(response.body));
   }
 
-  static Future<EditPatientResponse> editPatient({required String name,required String age,
-     required String phone,required String address,required String gender,required String userId}) async {
+  static Future<EditPatientResponse> editPatient(
+      {required String name,
+      required String age,
+      required String phone,
+      required String address,
+      required String gender,
+      required String userId}) async {
     var requestBody = EditPatientRequest(
         id: userId,
         phone: phone,
@@ -202,5 +216,52 @@ class ApiManager {
     var url = Uri.https(baseUrl, editPatientUrl);
     var response = await http.post(url, body: requestBody.toJson());
     return EditPatientResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<FindPatientResponse> findPatient(
+      String param, String userId) async {
+    var requestBody = FindPatientRequest(param: param, userId: userId);
+    var url = Uri.https(baseUrl, findPatientUrl);
+    var response = await http.post(url, body: requestBody.toJson());
+    return FindPatientResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<EditProfileResponse> editProfile(
+      {required String userId,
+      required String phone,
+      required String name,
+      required String address,
+      required String workdays,
+      required String startTime,
+      required String endTime,
+      required String step}) async {
+    var requestBody = EditProfileRequest(
+        userId: userId,
+        phone: phone,
+        name: name,
+        address: address,
+        workdays: workdays,
+        startTime: startTime,
+        endTime: endTime,
+        step: step);
+    var url = Uri.https(baseUrl, editProfileUrl);
+    var response = await http.post(url, body: requestBody.toJson());
+    return EditProfileResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<AppointmentsResponse> getAppointments(
+      {required String userId}) async {
+    var requestBody = AppointmentsRequest(userId: userId);
+    var url = Uri.https(baseUrl, appointmentUrl);
+    try {
+      var response = await http.post(url, body: requestBody.toJson());
+      if (response.statusCode == 200) {
+        return AppointmentsResponse.fromJson(jsonDecode(response.body));
+      } else {
+        throw Exception('Failed to load appointments');
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

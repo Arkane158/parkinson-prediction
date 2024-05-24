@@ -53,6 +53,28 @@ class EditViewModel extends Cubit<EditState> {
       }
     }
   }
+
+  void findPatient(String param) async {
+    try {
+      emit(LoadingState());
+      String? userId = await DoctorPreference.getUserId();
+
+      var response = await ApiManager.findPatient(param, userId!);
+
+      if (response.status == 200) {
+        patients = response.result; // Update patients list
+        emit(SuccessState("Patient list fetched successfully"));
+      } else {
+        emit(ErrorState(response.message ?? ''));
+      }
+    } catch (e) {
+      if (e is IOException || e is HttpException) {
+        emit(ErrorState('Check Your Internet connection'));
+      } else {
+        emit(ErrorState(e.toString()));
+      }
+    }
+  }
 }
 
 abstract class EditState {}

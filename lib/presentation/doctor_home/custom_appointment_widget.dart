@@ -1,7 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:parkinson_app/data/model/appointment.dart';
 
 class CustomAppointmentWidget extends StatelessWidget {
-  const CustomAppointmentWidget({super.key});
+  final Appointment appointment;
+
+  const CustomAppointmentWidget({Key? key, required this.appointment})
+      : super(key: key);
+
+  String _getMonthName(String? month) {
+    if (month == null) {
+      return 'Unknown';
+    }
+    switch (month) {
+      case '1':
+        return 'January';
+      case ' 2':
+        return 'February';
+      case '3':
+        return 'March';
+      case '4':
+        return 'April';
+      case '5':
+        return 'May';
+      case '6':
+        return 'June';
+      case '7':
+        return 'July';
+      case '8':
+        return 'August';
+      case '9':
+        return 'September';
+      case '10':
+        return 'October';
+      case '11':
+        return 'November';
+      case ' 12':
+        return 'December';
+      default:
+        return 'Unknown';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +65,7 @@ class CustomAppointmentWidget extends StatelessWidget {
                     width: size.width * .02,
                   ),
                   Text(
-                    'Ahmed Mohamed ',
+                    'Ahmed Mohamed', // You can replace this with the actual patient's name
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -36,21 +74,21 @@ class CustomAppointmentWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.calendar_month_outlined,
                         color: Color(0xff757575),
                         size: 25,
                       ),
                       Text(
-                        '15 May 2024',
-                        style: TextStyle(
+                        '${appointment.dayOfMonth} ${_getMonthName(appointment.month)} ${appointment.year.toString()}',
+                        style: const TextStyle(
                             color: Color(0xff757575),
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
@@ -59,14 +97,14 @@ class CustomAppointmentWidget extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.watch_later_outlined,
                         color: Color(0xff757575),
                         size: 25,
                       ),
                       Text(
-                        '2:00PM',
-                        style: TextStyle(
+                        appointment.timeOfDay,
+                        style: const TextStyle(
                             color: Color(0xff757575),
                             fontSize: 16,
                             fontWeight: FontWeight.w600),
