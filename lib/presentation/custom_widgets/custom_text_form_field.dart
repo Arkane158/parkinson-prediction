@@ -25,7 +25,7 @@ class CustomTextFormField extends StatefulWidget {
 }
 
 class CustomTextFormFieldState extends State<CustomTextFormField> {
-  bool hideText = false;
+  bool hideText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -79,8 +79,9 @@ class CustomTextFormFieldState extends State<CustomTextFormField> {
                         });
                       },
                       child: hideText
-                          ? const Icon(Icons.no_encryption_outlined)
-                          : const Icon(Icons.lock_outline_rounded),
+                          ? const Icon(Icons.remove_red_eye_outlined)
+                          : const ImageIcon(
+                              AssetImage('assets/images/jam_eye-close.png')),
                     )
                   : null,
               focusedBorder: OutlineInputBorder(

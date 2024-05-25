@@ -33,20 +33,16 @@ class DoctorDataCollectionViewModel extends Cubit<DoctorDataCollectionState> {
 
       if (response.status == 200) {
         emit(HideLoadingState());
-        var email = await DoctorPreference.getUserEmail();
-        
-        DoctorPreference.saveUserImg(img: response.img);
-        DoctorPreference.saveUserData(
-            email: email.toString(),
-            phone: phone,
-            name: name,
-            address: address,
-            workdays: workdays,
-            startTime: startTime,
-            endTime: endTime,
-            step: step);
-        DoctorPreference.saveEditProfileId(
-            editUserProfileId: response.editProfileId);
+
+        await DoctorPreference.saveUserName(name: name);
+        await DoctorPreference.saveUserPhone(phone: phone);
+        await DoctorPreference.saveUserEndTime(endTime: endTime);
+        await DoctorPreference.saveUserStartTime(startTime: startTime);
+        await DoctorPreference.saveUserWorkdays(workdays: workdays.toString());
+        await DoctorPreference.saveUserAddress(address: address);
+        await DoctorPreference.saveUserStep(step: step);
+        await DoctorPreference.saveUserImg(img: response.img);
+
         emit(SuccessState("Succsse"));
       }
       if (response.status == 404) {

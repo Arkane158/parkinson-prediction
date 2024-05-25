@@ -52,7 +52,9 @@ class _VerifyScreenState extends State<VerifyScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          'Forgot Password',
+          previousScreenName == SignUpScreen.screenName
+              ? 'Verify Account'
+              : 'Forgot Password',
           style: Theme.of(context).textTheme.headlineSmall,
         ),
       ),
@@ -179,7 +181,8 @@ class _VerifyScreenState extends State<VerifyScreen> {
                                 if (previousScreenName ==
                                     ForgotPassword.screenName) {
                                   Navigator.pushReplacementNamed(
-                                      context, ChangePasswordScreen.screenName,arguments: email);
+                                      context, ChangePasswordScreen.screenName,
+                                      arguments: email);
                                 }
                               },
                             );

@@ -73,12 +73,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 return 'Email is required';
                               }
                               // This regex pattern checks if the email format is valid
-                              // final emailRegExp =
-                              //     RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$');
+                              final emailRegExp =
+                                  RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$');
 
-                              // if (!emailRegExp.hasMatch(text)) {
-                              //   return 'Please enter a valid email address';
-                              // }
+                              if (!emailRegExp.hasMatch(text)) {
+                                return 'Please enter a valid email address';
+                              }
                               return null; // Return null if the email is valid
                             },
                           ),
@@ -97,9 +97,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               }
 
                               // Check if phone number length is not equal to 11 digits
-                              // if (text.length != 11) {
-                              //   return 'Phone number must be 11 digits long';
-                              // }
+                              if (text.length != 11) {
+                                return 'Phone number must be 11 digits long';
+                              }
 
                               return null; // Return null if the email is valid
                             },
@@ -114,25 +114,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               }
 
                               // Check if password length is less than 8 characters
-                              // if (text.length < 8) {
-                              //   return 'Password must be at least 8 characters long';
-                              // }
+                              if (text.length < 8) {
+                                return 'Password must be at least 8 characters long';
+                              }
 
-                              // // Check if password contains at least one uppercase letter
-                              // if (!text.contains(RegExp(r'[A-Z]'))) {
-                              //   return 'Password must contain at least one uppercase letter';
-                              // }
+                              // Check if password contains at least one uppercase letter
+                              if (!text.contains(RegExp(r'[A-Z]'))) {
+                                return 'Password must contain at least one uppercase letter';
+                              }
 
-                              // // Check if password contains at least one lowercase letter
-                              // if (!text.contains(RegExp(r'[a-z]'))) {
-                              //   return 'Password must contain at least one lowercase letter';
-                              // }
+                              // Check if password contains at least one lowercase letter
+                              if (!text.contains(RegExp(r'[a-z]'))) {
+                                return 'Password must contain at least one lowercase letter';
+                              }
 
-                              // // Check if password contains at least one special character
-                              // if (!text.contains(
-                              //     RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                              //   return 'Password must contain at least one special character';
-                              // }
+                              // Check if password contains at least one special character
+                              if (!text.contains(
+                                  RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                return 'Password must contain at least one special character';
+                              }
 
                               // Password meets all criteria
                               return null;
@@ -158,7 +158,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               Navigator.pushNamed(
                                   context, VerifyScreen.screenName, arguments: [
                                 _emailController.text,
-                                SignUpScreen.screenName
+                                SignUpScreen.screenName,
                               ]);
                             } else if (state is HideLoadingState) {
                               Navigator.pop(context);

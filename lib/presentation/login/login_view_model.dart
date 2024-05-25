@@ -9,43 +9,35 @@ class LoginViewModel extends Cubit<LoginState> {
   void login(String email, String password) async {
     try {
       emit(LoadingState());
+      DoctorPreference.clearUserData();
 
       var response = await ApiManager.signIn(email, password);
 
       if (response.status == 200) {
         emit(HideLoadingState());
-        // var doctor = response.doctor;
-        // print(doctor?.address);
-        // print(email);
-        // print(doctor?.endTime);
-        // print(doctor?.startTime);
-        // print(doctor?.step);
-        // print(doctor?.name);
-        // print(doctor?.workdays);
-        // print(doctor?.phone);
 
         if (response.doctor?.phone != null) {
           var doctor = response.doctor;
-          await DoctorPreference.saveUserData(
-            email: email,
-            phone: doctor!.phone!,
-            name: doctor.name!,
-            address: doctor.address!,
-            workdays: doctor.workdays.toString(),
-            startTime: doctor.startTime!,
-            endTime: doctor.endTime!,
-            step: doctor.step!,
-          );
-        }
-        if (response.doctor?.img != null) {
+          await DoctorPreference.saveUserName(name: doctor!.name!);
+          await DoctorPreference.saveUserPhone(phone: doctor.phone!);
+          await DoctorPreference.saveUserEmail(email: email);
+          await DoctorPreference.saveUserEndTime(endTime: doctor.endTime!);
+          await DoctorPreference.saveUserStartTime(
+              startTime: doctor.startTime!);
+          await DoctorPreference.saveUserWorkdays(
+              workdays: doctor.workdays.toString());
+          await DoctorPreference.saveUserAddress(address: doctor.address!);
+          await DoctorPreference.saveUserStep(step: doctor.step!);
           await DoctorPreference.saveUserImg(img: response.doctor!.img!);
+          await DoctorPreference.saveProfileId(
+              profileId: response.doctor!.profileId!);
         }
 
         await DoctorPreference.saveUserId(id: response.userId);
 
         emit(SuccessState("Login Successfully", response.profileCheck));
       }
-      if (response.status == 404) {
+      if (response.status != 200) {
         emit(HideLoadingState());
 
         emit(ErrorState(response.message));

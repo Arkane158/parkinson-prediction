@@ -10,20 +10,21 @@ class Doctor {
   String? startTime; // Add startTime parameter
   String? endTime; // Add endTime parameter
   String? step; // Add step parameter
+  String? profileId;
 
-  Doctor({
-    this.id,
-    this.password,
-    this.email,
-    this.phone,
-    this.name,
-    this.img,
-    this.address,
-    this.workdays,
-    this.startTime,
-    this.endTime,
-    this.step,
-  });
+  Doctor(
+      {this.id,
+      this.password,
+      this.email,
+      this.phone,
+      this.name,
+      this.img,
+      this.address,
+      this.workdays,
+      this.startTime,
+      this.endTime,
+      this.step,
+      this.profileId});
 
   Doctor.fromJson(Map<String, dynamic> json)
       : id = json['id'],
@@ -38,6 +39,7 @@ class Doctor {
             : null,
         startTime = json['startTime'],
         endTime = json['endTime'],
+        profileId = json['_id'],
         step = json['step'];
 
   Map<String, dynamic> toJson() {
@@ -53,6 +55,7 @@ class Doctor {
     data['startTime'] = startTime;
     data['endTime'] = endTime;
     data['step'] = step;
+    data['_id'] = profileId;
     return data;
   }
 }

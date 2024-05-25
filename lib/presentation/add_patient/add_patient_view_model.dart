@@ -6,17 +6,23 @@ import 'package:parkinson_app/prefrence/doctor_save_shared_prefrence.dart';
 
 class AddPatientViewModel extends Cubit<AddPatientState> {
   AddPatientViewModel() : super(LoadingState());
-  void addPatient(String phone, String name, String age, String gender,String address) async {
+  void addPatient(String phone, String name, String age, String gender,
+      String address) async {
     try {
       emit(LoadingState());
       String? userId = await DoctorPreference.getUserId();
 
       var response = await ApiManager.addPatient(
-          phone: phone, name: name, age: age, gender: gender, userId: userId!, address: address);
-   
+          phone: phone,
+          name: name,
+          age: age,
+          gender: gender,
+          userId: userId!,
+          address: address);
+
       if (response.status == 200) {
         emit(HideLoadingState());
-        emit(SuccessState("Email Verified Successfully"));
+        emit(SuccessState(response.message));
       }
       if (response.status == 404) {
         emit(HideLoadingState());

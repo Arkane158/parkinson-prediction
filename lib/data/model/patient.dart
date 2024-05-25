@@ -5,9 +5,10 @@ class Patient {
   final String name;
   final String age;
   final String gender;
-  final String illness;
+  final String? illness;
   final String? address; // Add the address field
   final int v;
+  String? score;
 
   Patient({
     required this.id,
@@ -19,6 +20,7 @@ class Patient {
     this.illness = '',
     this.address, // Include it in the constructor
     this.v = 0,
+    this.score,
   });
 
   factory Patient.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class Patient {
       illness: json['illness'] ?? '',
       address: json['address'], // Add it to the factory constructor
       v: json['__v'] ?? 0,
+      score: json['score'],
     );
   }
 
@@ -46,6 +49,7 @@ class Patient {
       'illness': illness,
       'address': address ?? '', // Add it to the JSON representation
       '__v': v,
+      'score': score,
     };
   }
 }

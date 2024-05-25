@@ -10,9 +10,9 @@ class AuthWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: height * .05,
+          height: height * .1,
         ),
-        Image.asset('assets/images/logo.png'),
+        // Image.asset('assets/images/logo.png'),
         Center(
           child: Text(
             tittle,

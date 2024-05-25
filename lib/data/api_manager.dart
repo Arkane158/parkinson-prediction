@@ -11,6 +11,7 @@ import 'package:parkinson_app/data/request/find_patient_request.dart';
 import 'package:parkinson_app/data/request/forgot_password_request.dart';
 import 'package:parkinson_app/data/request/patient_list_request.dart';
 import 'package:parkinson_app/data/request/reset_password_request.dart';
+import 'package:parkinson_app/data/request/score_request.dart';
 import 'package:parkinson_app/data/request/sign_request.dart';
 import 'package:parkinson_app/data/request/sign_up_request.dart';
 import 'package:parkinson_app/data/request/verification_request.dart';
@@ -20,11 +21,14 @@ import 'package:parkinson_app/data/response/appointment_response.dart';
 import 'package:parkinson_app/data/response/delete_patient_response.dart';
 import 'package:parkinson_app/data/response/doctor_data_collection_response.dart';
 import 'package:parkinson_app/data/response/edit_patient_response.dart';
+import 'package:parkinson_app/data/response/edit_profile_image_response.dart';
 import 'package:parkinson_app/data/response/edit_profile_response.dart';
 import 'package:parkinson_app/data/response/find_patient_response.dart';
 import 'package:parkinson_app/data/response/forgot_password_response.dart';
 import 'package:parkinson_app/data/response/get_patient_list_rseponse.dart';
+import 'package:parkinson_app/data/response/predict_response.dart';
 import 'package:parkinson_app/data/response/reset_password_response.dart';
+import 'package:parkinson_app/data/response/score_response.dart';
 import 'package:parkinson_app/data/response/sigin_response.dart';
 import 'package:parkinson_app/data/response/sign_up_response.dart';
 import 'package:http/http.dart' as http;
@@ -33,6 +37,7 @@ import 'package:parkinson_app/data/response/verify_reset_password_response.dart'
 
 class ApiManager {
   static const String baseUrl = 'parkinson-9ek4.onrender.com';
+  static const String predictionBaseUrl = 'ai-server-lfce.onrender.com';
   static const String signInUrl = '/login';
   static const String signUpUrl = '/signup';
   static const String verificationUrl = '/emailverification';
@@ -47,6 +52,8 @@ class ApiManager {
   static const String findPatientUrl = '/findPatient';
   static const String editProfileUrl = '/edit-profile';
   static const String appointmentUrl = '/apoinmments';
+  static const String newImageUrl = '/new-profileImage';
+  static const String scoreUrl = '/score';
 
   static Future<SignUpResponse> signUpRequset({
     required String email,
@@ -263,5 +270,89 @@ class ApiManager {
     } catch (e) {
       rethrow;
     }
+  }
+
+  static Future<EditProfileImageResponse> editProfileImage(
+      File image, String id) async {
+    try {
+      // Create a multipart request
+      var uri =
+          Uri.parse('https://parkinson-9ek4.onrender.com/new-profileImage');
+      var request = http.MultipartRequest('POST', uri);
+
+      // Add the image file to the request
+      var stream = http.ByteStream(image.openRead());
+      var length = await image.length();
+      var multipartFile = http.MultipartFile(
+        'image',
+        stream,
+        length,
+        filename: 'profile_image.jpg',
+      );
+      request.files.add(multipartFile);
+      // Add other fields to the request
+      request.fields['_id'] = id;
+
+      // Send the request
+      var response = await request.send();
+
+      // Check if the request was successful (status code 200)
+      if (response.statusCode == 200) {
+        // Parse the response
+        var responseData = await response.stream.bytesToString();
+        var jsonResponse = jsonDecode(responseData);
+        return EditProfileImageResponse.fromJson(jsonResponse);
+      } else {
+        // If the request was not successful, throw an exception
+        throw Exception(
+            'Failed to edit profile image: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      // If an error occurs during the request, throw an exception
+      throw Exception('Failed to edit profile image: $e');
+    }
+  }
+
+  static Future<PredictResponse> predict(File file) async {
+    try {
+      // Create a multipart request
+      var uri = Uri.parse('https://ai-server-lfce.onrender.com/predict');
+      var request = http.MultipartRequest('POST', uri);
+
+      // Add the file to the request
+      var stream = http.ByteStream(file.openRead());
+      var length = await file.length();
+      var multipartFile = http.MultipartFile(
+        'file',
+        stream,
+        length,
+        filename: file.path.split('/').last,
+      );
+      request.files.add(multipartFile);
+
+      // Send the request
+      var response = await request.send();
+
+      // Check if the request was successful (status code 200)
+      if (response.statusCode == 200) {
+        // Parse the response
+        var responseData = await response.stream.bytesToString();
+        var jsonResponse = jsonDecode(responseData);
+        return PredictResponse.fromJson(jsonResponse);
+      } else {
+        // If the request was not successful, throw an exception
+        throw Exception('Failed to upload file: ${response.reasonPhrase}');
+      }
+    } catch (e) {
+      // If an error occurs during the request, throw an exception
+      throw Exception('Failed to upload file: $e');
+    }
+  }
+
+  static Future<ScoreResponse> score(String userId, String score)async {
+    var url = Uri.https(baseUrl, scoreUrl);
+    var requestBody = ScoreRequest(userId: userId, score: score);
+    var response = await http.post(url, body: requestBody.toJson());
+    return ScoreResponse.fromJson(jsonDecode(response.body));
   }
 }

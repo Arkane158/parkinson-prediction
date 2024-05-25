@@ -44,7 +44,14 @@ class EditAccountSection extends StatelessWidget {
                           fontSize: 16, fontWeight: FontWeight.w400),
                     ),
                   ),
-                  const Expanded(flex: 1, child: Icon(Icons.edit)),
+                  Expanded(
+                      flex: 1,
+                      child: Icon(
+                        Icons.edit,
+                        color: tittle == 'Email'
+                            ? Colors.transparent
+                            : Colors.grey,
+                      )),
                 ],
               ),
             ),

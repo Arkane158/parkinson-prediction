@@ -6,6 +6,7 @@ import 'package:parkinson_app/presentation/custom_widgets/dialoge_utils.dart';
 import 'package:parkinson_app/presentation/edit/edit_patient_info/edit_patient_info_screen.dart';
 import 'package:parkinson_app/presentation/edit/edit_screen_view_model.dart';
 import 'package:parkinson_app/presentation/edit/table_row.dart';
+import 'package:parkinson_app/presentation/view_patient/view_patient_screen.dart';
 
 class EditScreen extends StatefulWidget {
   const EditScreen({Key? key}) : super(key: key);
@@ -126,7 +127,7 @@ class _EditScreenState extends State<EditScreen> {
                     child: Center(
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text('Patient'),
+                        child: Text('Score'),
                       ),
                     ),
                   ),
@@ -157,33 +158,40 @@ class _EditScreenState extends State<EditScreen> {
                                 return Padding(
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 5),
-                                  child: TableRowWidget(
-                                    age: patient.age.toString(),
-                                    name: patient.name,
-                                    gender: patient.gender,
-                                    patinet:
-                                        patient.illness.isEmpty ? "no" : "yes",
-                                    deleteFun: (_) {
-                                      DialogeUtils.showMessage(context,
-                                          "Are You sure you want to Delete?",
-                                          posActionTitle: 'Ok',
-                                          posAction: () {
-                                            setState(() {
-                                              viewModel
-                                                  .deletePatient(patient.id);
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, ViewPatientScreen.screenName,
+                                          arguments: patient);
+                                    },
+                                    child: TableRowWidget(
+                                      age: patient.age.toString(),
+                                      name: patient.name,
+                                      gender: patient.gender,
+                                      patinet: patient.score!,
+                                      deleteFun: (_) {
+                                        DialogeUtils.showMessage(context,
+                                            "Are You sure you want to Delete?",
+                                            posActionTitle: 'Ok',
+                                            posAction: () {
+                                              setState(() {
+                                                viewModel
+                                                    .deletePatient(patient.id);
+                                              });
+                                              viewModel.getPatientList();
+                                            },
+                                            negActionTitle: 'Cancel',
+                                            negAction: () {
+                                              Navigator.pop(context);
                                             });
-                                            viewModel.getPatientList();
-                                          },
-                                          negActionTitle: 'Cancel',
-                                          negAction: () {
-                                            Navigator.pop(context);
-                                          });
-                                    },
-                                    editFun: (_) {
-                                      Navigator.pushNamed(context,
-                                          EditPatientInfoScreen.screenName,
-                                          arguments: viewModel.patients[index]);
-                                    },
+                                      },
+                                      editFun: (_) {
+                                        Navigator.pushNamed(context,
+                                            EditPatientInfoScreen.screenName,
+                                            arguments:
+                                                viewModel.patients[index]);
+                                      },
+                                    ),
                                   ),
                                 );
                               },

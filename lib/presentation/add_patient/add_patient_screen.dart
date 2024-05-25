@@ -5,7 +5,6 @@ import 'package:parkinson_app/presentation/custom_widgets/custom_elevated_icon_b
 import 'package:parkinson_app/presentation/custom_widgets/custom_text_form_field.dart';
 import 'package:parkinson_app/presentation/custom_widgets/dialoge_utils.dart';
 import 'package:parkinson_app/presentation/doctor_home/app_bar_bottom_nav_bar.dart';
-import 'package:parkinson_app/presentation/edit/edit_screen.dart';
 
 class AddPatientScreen extends StatefulWidget {
   static const String screenName = "addPatientScreen";
@@ -29,7 +28,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    var previousScreen = ModalRoute.of(context)?.settings.arguments;
+   
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 248, 245, 245),
       appBar: AppBar(title: const Text('Add Patient')),
@@ -186,10 +185,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                                     // Navigate to the prediction screen if needed
                                   }
                                 },
-                                label: previousScreen.toString() ==
-                                        EditScreen.screenName
-                                    ? 'Add Patient'
-                                    : 'Predict',
+                                label: 'Add Patient',
                                 icon: const ImageIcon(
                                   AssetImage('assets/images/predict.png'),
                                 ),
