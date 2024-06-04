@@ -131,8 +131,7 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                       color: Colors.grey.withOpacity(0.5),
                                       spreadRadius: 5,
                                       blurRadius: 7,
-                                      offset: const Offset(0,
-                                          3), // changes the position of the shadow
+                                      offset: const Offset(0, 3),
                                     ),
                                   ],
                                   gradient: LinearGradient(
@@ -141,12 +140,10 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                       Theme.of(context).primaryColor,
                                       Theme.of(context).primaryColor
                                     ],
-                                    tileMode: TileMode
-                                        .repeated, // repeats the gradient over the canvas
+                                    tileMode: TileMode.repeated,
                                   ),
                                 ),
                                 onSelect: (values) {
-                                  // <== Callback to handle the selected days
                                   setState(() {
                                     selectedDays = values;
                                   });
@@ -276,8 +273,7 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                   "${_fromTime1!.hour}:${_fromTime1!.minute}";
                             }
                             if (_toTime1 != null) {
-                              endTime =
-                                  "${_fromTime1!.hour}:${_fromTime1!.minute}";
+                              endTime = "${_toTime1!.hour}:${_toTime1!.minute}";
                             }
                           }
                           viewModel.editProfile(

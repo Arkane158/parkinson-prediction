@@ -41,9 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String convertDriveLink(String originalLink) {
-    String fileId = originalLink.substring(
-        originalLink.indexOf('/d/') + 3, originalLink.indexOf('/view'));
-    return 'https://drive.google.com/uc?id=$fileId&export=download';
+    return originalLink;
   }
 
   @override

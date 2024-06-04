@@ -1,4 +1,3 @@
-// LoginResponse
 import 'package:parkinson_app/data/model/doctor.dart';
 
 class SignInResponse {

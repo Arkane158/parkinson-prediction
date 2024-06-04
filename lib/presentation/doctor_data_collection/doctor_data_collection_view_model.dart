@@ -20,6 +20,8 @@ class DoctorDataCollectionViewModel extends Cubit<DoctorDataCollectionState> {
     try {
       emit(LoadingState());
       String? userId = await DoctorPreference.getUserId();
+      print(startTime);
+      print(endTime);
       var response = await ApiManager.doctorDataCollection(
           userId: userId!,
           image: image,

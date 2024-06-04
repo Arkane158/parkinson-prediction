@@ -28,7 +28,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-   
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 248, 245, 245),
       appBar: AppBar(title: const Text('Add Patient')),
@@ -188,6 +188,7 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
                                 label: 'Add Patient',
                                 icon: const ImageIcon(
                                   AssetImage('assets/images/predict.png'),
+                                  color: Colors.white,
                                 ),
                               );
                             }),

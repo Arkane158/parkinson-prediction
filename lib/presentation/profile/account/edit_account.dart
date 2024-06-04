@@ -53,14 +53,15 @@ class _EditAccountState extends State<EditAccount> {
       startTime = doctorStartTime;
       endTime = doctorEndTime;
       step = doctorStep;
+      print(startTime);
+      print('hi');
+      print(endTime);
       address = doctorAddress;
     });
   }
 
   String convertDriveLink(String originalLink) {
-    String fileId = originalLink.substring(
-        originalLink.indexOf('/d/') + 3, originalLink.indexOf('/view'));
-    return 'https://drive.google.com/uc?id=$fileId&export=download';
+    return originalLink;
   }
 
   @override

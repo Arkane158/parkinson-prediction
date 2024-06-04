@@ -11,7 +11,7 @@ class VerifyAccountViewModel extends Cubit<VerifyState> {
       var response = await ApiManager.verifyAccount(code, email);
       if (response.status == 200) {
         emit(HideLoadingState());
-        emit(SuccessState("Email Verified Successfully"));
+        emit(SuccessState(response.message??'success'));
       }
       if (response.status == 404) {
         emit(HideLoadingState());
@@ -34,7 +34,7 @@ class VerifyAccountViewModel extends Cubit<VerifyState> {
       var response = await ApiManager.verifyResetPassword(email, code);
       if (response.status == 200) {
         emit(HideLoadingState());
-        emit(SuccessState("Email Verified Successfully"));
+        emit(SuccessState(response.message??'success'));
       }
       if (response.status == 404) {
         emit(HideLoadingState());

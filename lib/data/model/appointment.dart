@@ -8,6 +8,7 @@ class Appointment {
   final String? month; // Nullable since it's not always present
   final String? year; // Nullable since it's not always present
   final int v;
+  final String? img;
 
   Appointment({
     required this.id,
@@ -18,6 +19,7 @@ class Appointment {
     required this.timeOfDay,
     this.month,
     this.year,
+    this.img,
     required this.v,
   });
 
@@ -32,6 +34,9 @@ class Appointment {
       month: json['month'], // Nullable since it's not always present
       year: json['Year'], // Nullable since it's not always present
       v: json['__v'],
+      img: json['img'],
     );
   }
+
+  where(bool Function(dynamic appointment) param0) {}
 }

@@ -26,21 +26,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> loadImage() async {
-    String? imageUrl = await DoctorPreference.getUserImg();
+    String? doctorImage = await DoctorPreference.getUserImg();
     String? doctorName = await DoctorPreference.getUserName();
-    name = doctorName;
     setState(() {
-      img = imageUrl != null && imageUrl.isNotEmpty
-          ? convertDriveLink(imageUrl)
-          : null;
+      img = doctorImage;
+      name = doctorName;
     });
-  }
-
-  String convertDriveLink(String originalLink) {
-    String fileId = originalLink.substring(
-        originalLink.indexOf('/d/') + 3, originalLink.indexOf('/view'));
-
-    return 'https://drive.google.com/uc?id=$fileId&export=download';
   }
 
   @override
@@ -79,9 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           CircleAvatar(
                             radius: size.width * .08,
                             backgroundColor: Colors.transparent,
-                            backgroundImage: img != null
-                                ? CachedNetworkImageProvider(img!)
-                                : null,
+                            backgroundImage: CachedNetworkImageProvider(img!),
                             child: img == null
                                 ? const Icon(Icons.person, color: Colors.white)
                                 : null,
@@ -119,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Align(
                         alignment: Alignment.topCenter,
                         child: SizedBox(
-                          height: size.height * .19,
+                          height: size.height * .22,
                           width: size.width * .95,
                           child: Container(
                             decoration: const BoxDecoration(
@@ -163,6 +152,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       onTap: () => Navigator.pushNamed(
                                           context, AddPatientScreen.screenName),
                                       child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 8, horizontal: 12),
                                         decoration: BoxDecoration(
                                           shape: BoxShape.rectangle,
                                           borderRadius: const BorderRadius.all(
@@ -170,14 +161,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                           ),
                                           color: Theme.of(context).primaryColor,
                                         ),
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(5),
-                                          child: Text(
-                                            'Predict',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15,
-                                            ),
+                                        child: const Text(
+                                          'Predict',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
                                           ),
                                         ),
                                       ),

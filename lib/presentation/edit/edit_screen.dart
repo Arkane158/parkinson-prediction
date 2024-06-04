@@ -99,7 +99,10 @@ class _EditScreenState extends State<EditScreen> {
                             context, AddPatientScreen.screenName,
                             arguments: EditScreen.screenName);
                       },
-                      child: const Icon(Icons.person_add_alt_sharp),
+                      child: const Icon(
+                        Icons.person_add_alt_sharp,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),

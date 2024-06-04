@@ -109,7 +109,9 @@ class ApiManager {
   static Future<SignInResponse> signIn(String email, String password) async {
     var requestBody = SignInRequest(email: email, password: password);
     var url = Uri.https(baseUrl, signInUrl);
+    print('hi');
     var response = await http.post(url, body: requestBody.toJson());
+    print(response.body);
     return SignInResponse.fromJson(jsonDecode(response.body));
   }
 
@@ -349,7 +351,7 @@ class ApiManager {
     }
   }
 
-  static Future<ScoreResponse> score(String userId, String score)async {
+  static Future<ScoreResponse> score(String userId, String score) async {
     var url = Uri.https(baseUrl, scoreUrl);
     var requestBody = ScoreRequest(userId: userId, score: score);
     var response = await http.post(url, body: requestBody.toJson());

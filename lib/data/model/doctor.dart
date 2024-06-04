@@ -1,37 +1,32 @@
 class Doctor {
   String? id;
-  String? password;
-  String? email;
   String? phone;
   String? name;
-  String? img; // Add image parameter
-  String? address; // Add address parameter
-  List<String>? workdays; // Add workdays parameter
-  String? startTime; // Add startTime parameter
-  String? endTime; // Add endTime parameter
-  String? step; // Add step parameter
+  String? img;
+  String? address;
+  List<String>? workdays;
+  String? startTime;
+  String? endTime;
+  String? step;
   String? profileId;
 
-  Doctor(
-      {this.id,
-      this.password,
-      this.email,
-      this.phone,
-      this.name,
-      this.img,
-      this.address,
-      this.workdays,
-      this.startTime,
-      this.endTime,
-      this.step,
-      this.profileId});
+  Doctor({
+    this.id,
+    this.phone,
+    this.name,
+    this.img,
+    this.address,
+    this.workdays,
+    this.startTime,
+    this.endTime,
+    this.step,
+    this.profileId,
+  });
 
   Doctor.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        password = json['password'],
-        email = json['email'],
+      : id = json['_id'],
         phone = json['phone'],
-        name = json['name'],
+        name = json['Name'], // Use 'Name' as per the provided JSON response
         img = json['img'],
         address = json['address'],
         workdays = json['workdays'] != null
@@ -39,23 +34,20 @@ class Doctor {
             : null,
         startTime = json['startTime'],
         endTime = json['endTime'],
-        profileId = json['_id'],
-        step = json['step'];
+        step = json['step'],
+        profileId = json['_id'];
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['password'] = password;
-    data['email'] = email;
+    data['_id'] = id;
     data['phone'] = phone;
-    data['name'] = name;
+    data['Name'] = name;
     data['img'] = img;
     data['address'] = address;
     data['workdays'] = workdays;
     data['startTime'] = startTime;
     data['endTime'] = endTime;
     data['step'] = step;
-    data['_id'] = profileId;
     return data;
   }
 }
