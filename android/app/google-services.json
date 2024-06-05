@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "973885549901",
+    "project_id": "parkinson-cha",
+    "storage_bucket": "parkinson-cha.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973885549901:android:690db370eaf7d75c9f5b04",
+        "android_client_info": {
+          "package_name": "com.example.parkinson_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5VD8c3nr61KXtquh_A2rN4MU2gCq4I6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:973885549901:android:dd12ea247f0d17ff9f5b04",
+        "android_client_info": {
+          "package_name": "com.example.parkinson_patient"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5VD8c3nr61KXtquh_A2rN4MU2gCq4I6Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

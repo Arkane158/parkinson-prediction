@@ -58,9 +58,6 @@ class EditAccountViewModel extends Cubit<EditAccountState> {
           startTime: startTime,
           endTime: endTime,
           step: step);
-      print(startTime);
-      print('hi');
-      print(endTime);
       await DoctorPreference.saveUserName(name: name);
       await DoctorPreference.saveUserPhone(phone: phone);
       await DoctorPreference.saveUserEndTime(endTime: endTime);

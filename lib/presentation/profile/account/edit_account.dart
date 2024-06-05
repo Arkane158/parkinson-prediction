@@ -53,9 +53,6 @@ class _EditAccountState extends State<EditAccount> {
       startTime = doctorStartTime;
       endTime = doctorEndTime;
       step = doctorStep;
-      print(startTime);
-      print('hi');
-      print(endTime);
       address = doctorAddress;
     });
   }

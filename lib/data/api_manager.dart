@@ -37,7 +37,6 @@ import 'package:parkinson_app/data/response/verify_reset_password_response.dart'
 
 class ApiManager {
   static const String baseUrl = 'parkinson-9ek4.onrender.com';
-  static const String predictionBaseUrl = 'ai-server-lfce.onrender.com';
   static const String signInUrl = '/login';
   static const String signUpUrl = '/signup';
   static const String verificationUrl = '/emailverification';
@@ -109,9 +108,7 @@ class ApiManager {
   static Future<SignInResponse> signIn(String email, String password) async {
     var requestBody = SignInRequest(email: email, password: password);
     var url = Uri.https(baseUrl, signInUrl);
-    print('hi');
     var response = await http.post(url, body: requestBody.toJson());
-    print(response.body);
     return SignInResponse.fromJson(jsonDecode(response.body));
   }
 

@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:parkinson_app/firebase_options.dart';
 import 'package:parkinson_app/presentation/edit/edit_patient_info/edit_patient_info_screen.dart';
 import 'package:parkinson_app/presentation/predict/predict_screen_after_add_patient.dart';
 import 'package:parkinson_app/presentation/profile/about_us/about_us_screen.dart';
@@ -22,9 +24,14 @@ import 'package:parkinson_app/presentation/theme_data.dart';
 import 'package:parkinson_app/presentation/login/login_screen.dart';
 import 'package:parkinson_app/presentation/view_patient/view_patient_screen.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
