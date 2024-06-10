@@ -92,7 +92,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     .titleSmall
                                     ?.copyWith(color: Colors.white),
                               ),
-                              Icon(Icons.chat)
                       ],
                     ),
                   ],

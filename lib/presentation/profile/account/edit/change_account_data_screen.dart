@@ -69,6 +69,7 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
     var spacing = height * .02;
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
         title: Text('Change $title'),
       ),
@@ -78,222 +79,245 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
           padding: EdgeInsets.symmetric(
               horizontal: size.width * .02, vertical: size.height * .02),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: [
-                    if (title == 'name' ||
-                        title == 'phone' ||
-                        title == 'address')
-                      CustomTextFormField(
-                        type: title == 'phone'
-                            ? TextInputType.phone
-                            : TextInputType.name,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a value';
-                          }
-                          if (title == 'phone' && value.length != 11) {
-                            return 'Phone number must be 11 digits';
-                          }
-                          return null;
-                        },
-                        title: title,
-                        controller: editController,
-                        hint: 'Enter the New $title',
-                        icon: const Icon(Icons.edit),
-                      )
-                    else
-                      Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Working Days',
-                              style: Theme.of(context).textTheme.headlineSmall,
-                            ),
-                          ),
-                          SizedBox(height: spacing),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SelectWeekDays(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                days: _days,
-                                border: false,
-                                boxDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15.0),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 5,
-                                      blurRadius: 7,
-                                      offset: const Offset(0, 3),
-                                    ),
-                                  ],
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    colors: [
-                                      Theme.of(context).primaryColor,
-                                      Theme.of(context).primaryColor
-                                    ],
-                                    tileMode: TileMode.repeated,
-                                  ),
-                                ),
-                                onSelect: (values) {
-                                  setState(() {
-                                    selectedDays = values;
-                                  });
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            if (title == 'name' ||
+                                title == 'phone' ||
+                                title == 'address')
+                              CustomTextFormField(
+                                type: title == 'phone'
+                                    ? TextInputType.phone
+                                    : TextInputType.name,
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please enter a value';
+                                  }
+                                  if (title == 'phone' && value.length != 11) {
+                                    return 'Phone number must be 11 digits';
+                                  }
+                                  return null;
                                 },
-                              ),
+                                title: title,
+                                controller: editController,
+                                hint: 'Enter the New $title',
+                                icon: const Icon(Icons.edit),
+                              )
+                            else
+                              Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'Working Days',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall,
+                                    ),
+                                  ),
+                                  SizedBox(height: spacing),
+                                  Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SelectWeekDays(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        days: _days,
+                                        border: false,
+                                        boxDecoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color:
+                                                  Colors.grey.withOpacity(0.5),
+                                              spreadRadius: 5,
+                                              blurRadius: 7,
+                                              offset: const Offset(0, 3),
+                                            ),
+                                          ],
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            colors: [
+                                              Theme.of(context).primaryColor,
+                                              Theme.of(context).primaryColor
+                                            ],
+                                            tileMode: TileMode.repeated,
+                                          ),
+                                        ),
+                                        onSelect: (values) {
+                                          setState(() {
+                                            selectedDays = values;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: spacing),
+                                  const Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Text("From",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500)),
+                                      Text("To",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w500)),
+                                    ],
+                                  ),
+                                  SizedBox(height: spacing),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      TextButton(
+                                        onPressed: () =>
+                                            _selectFromTime1(context),
+                                        child: Text(
+                                          _fromTime1 != null
+                                              ? _formatTime(_fromTime1!)
+                                              : "Select Time",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed: () =>
+                                            _selectToTime1(context),
+                                        child: Text(
+                                          _toTime1 != null
+                                              ? _formatTime(_toTime1!)
+                                              : "Select Time",
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            color:
+                                                Theme.of(context).primaryColor,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: spacing),
+                                  CustomTextFormField(
+                                    title: 'Examination Time',
+                                    controller: editController,
+                                    hint: 'Time of 1 ex in minutes',
+                                    icon: const Icon(Icons.timer),
+                                    type: TextInputType.number,
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Please enter examination time';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  SizedBox(height: spacing),
+                                ],
+                              )
+                          ],
+                        ),
+                      ),
+                      BlocConsumer<EditAccountViewModel, EditAccountState>(
+                        listener: (context, state) {
+                          if (state is LoadingState) {
+                            DialogeUtils.showProgressDialog(
+                                context, 'Loading...');
+                          } else if (state is ErrorState) {
+                            DialogeUtils.showMessage(
+                                context, state.errorMessage,
+                                posActionTitle: 'Ok');
+                          } else if (state is SuccessState) {
+                            DialogeUtils.showMessage(context, state.message,
+                                posActionTitle: 'Ok', posAction: () {
+                              Navigator.pushReplacementNamed(
+                                  context, AppBarAndBottomNav.screenName);
+                            });
+                          } else if (state is HideLoadingState) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        builder: (context, state) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: size.width * .05),
+                            child: CustomElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
+                                  if (title != 'name' &&
+                                      title != 'phone' &&
+                                      title != 'address') {
+                                    if (selectedDays.isEmpty) {
+                                      DialogeUtils.showMessage(context,
+                                          'Please select at least one working day',
+                                          posActionTitle: 'Ok');
+                                      return;
+                                    }
+                                    if (_fromTime1 == null) {
+                                      DialogeUtils.showMessage(
+                                          context, 'Please select a start time',
+                                          posActionTitle: 'Ok');
+                                      return;
+                                    }
+                                    if (_toTime1 == null) {
+                                      DialogeUtils.showMessage(
+                                          context, 'Please select an end time',
+                                          posActionTitle: 'Ok');
+                                      return;
+                                    }
+                                  }
+                                  if (title == 'address') {
+                                    address = editController.text;
+                                  } else if (title == 'phone') {
+                                    phone = editController.text;
+                                  } else if (title == 'name') {
+                                    name = editController.text;
+                                  } else if (title == 'workDays') {
+                                    step = editController.text;
+                                    if (_fromTime1 != null) {
+                                      startTime =
+                                          "${_fromTime1!.hour.toString().padLeft(2, '0')}:${_fromTime1!.minute.toString().padLeft(2, '0')}";
+                                    }
+                                    if (_toTime1 != null) {
+                                      endTime =
+                                          "${_toTime1!.hour.toString().padLeft(2, '0')}:${_toTime1!.minute.toString().padLeft(2, '0')}";
+                                    }
+                                  }
+                                  viewModel.editProfile(
+                                    phone: phone!,
+                                    name: name!,
+                                    address: address!,
+                                    workdays: selectedDays.toString(),
+                                    startTime: startTime!,
+                                    endTime: endTime!,
+                                    step: step!,
+                                  );
+                                }
+                              },
+                              label: "Submit",
                             ),
-                          ),
-                          SizedBox(height: spacing),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Text("From",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500)),
-                              Text("To",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500)),
-                            ],
-                          ),
-                          SizedBox(height: spacing),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              TextButton(
-                                onPressed: () => _selectFromTime1(context),
-                                child: Text(
-                                  _fromTime1 != null
-                                      ? "${_fromTime1!.hour}:${_fromTime1!.minute}"
-                                      : "Select Time",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () => _selectToTime1(context),
-                                child: Text(
-                                  _toTime1 != null
-                                      ? "${_toTime1!.hour}:${_toTime1!.minute}"
-                                      : "Select Time",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    color: Theme.of(context).primaryColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: spacing),
-                          CustomTextFormField(
-                            title: 'Examination Time',
-                            controller: editController,
-                            hint: 'Time of 1 ex in minutes',
-                            icon: const Icon(Icons.timer),
-                            type: TextInputType.number,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter examination time';
-                              }
-                              return null;
-                            },
-                          ),
-                          SizedBox(height: spacing),
-                        ],
-                      )
-                  ],
-                ),
-              ),
-              BlocConsumer<EditAccountViewModel, EditAccountState>(
-                listener: (context, state) {
-                  if (state is LoadingState) {
-                    DialogeUtils.showProgressDialog(context, 'Loading...');
-                  } else if (state is ErrorState) {
-                    DialogeUtils.showMessage(context, state.errorMessage,
-                        posActionTitle: 'Ok');
-                  } else if (state is SuccessState) {
-                    DialogeUtils.showMessage(context, state.message,
-                        posActionTitle: 'Ok', posAction: () {
-                      Navigator.pushReplacementNamed(
-                          context, AppBarAndBottomNav.screenName);
-                    });
-                  } else if (state is HideLoadingState) {
-                    Navigator.pop(context);
-                  }
-                },
-                builder: (context, state) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: size.width * .05),
-                    child: CustomElevatedButton(
-                      onPressed: () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          if (title != 'name' &&
-                              title != 'phone' &&
-                              title != 'address') {
-                            if (selectedDays.isEmpty) {
-                              DialogeUtils.showMessage(context,
-                                  'Please select at least one working day',
-                                  posActionTitle: 'Ok');
-                              return;
-                            }
-                            if (_fromTime1 == null) {
-                              DialogeUtils.showMessage(
-                                  context, 'Please select a start time',
-                                  posActionTitle: 'Ok');
-                              return;
-                            }
-                            if (_toTime1 == null) {
-                              DialogeUtils.showMessage(
-                                  context, 'Please select an end time',
-                                  posActionTitle: 'Ok');
-                              return;
-                            }
-                          }
-                          if (title == 'address') {
-                            address = editController.text;
-                          } else if (title == 'phone') {
-                            phone = editController.text;
-                          } else if (title == 'name') {
-                            name = editController.text;
-                          } else if (title == 'workDays') {
-                            step = editController.text;
-                            if (_fromTime1 != null) {
-                              startTime =
-                                  "${_fromTime1!.hour}:${_fromTime1!.minute}";
-                            }
-                            if (_toTime1 != null) {
-                              endTime = "${_toTime1!.hour}:${_toTime1!.minute}";
-                            }
-                          }
-                          viewModel.editProfile(
-                            phone: phone!,
-                            name: name!,
-                            address: address!,
-                            workdays: selectedDays.toString(),
-                            startTime: startTime!,
-                            endTime: endTime!,
-                            step: step!,
                           );
-                        }
-                      },
-                      label: "Submit",
-                    ),
-                  );
-                },
-              ),
-              SizedBox(
-                height: size.height * .02,
+                        },
+                      ),
+                      SizedBox(
+                        height: size.height * .02,
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -324,6 +348,10 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
         _toTime1 = picked;
       });
     }
+  }
+
+  String _formatTime(TimeOfDay time) {
+    return "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
   }
 
   final List<DayInWeek> _days = [

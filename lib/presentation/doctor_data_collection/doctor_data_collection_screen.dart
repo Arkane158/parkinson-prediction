@@ -1,13 +1,14 @@
 import 'dart:io';
 
-import 'package:day_picker/day_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_elevated_buttom.dart';
 import 'package:parkinson_app/presentation/custom_widgets/custom_text_form_field.dart';
 import 'package:parkinson_app/presentation/custom_widgets/dialoge_utils.dart';
 import 'package:parkinson_app/presentation/doctor_data_collection/doctor_data_collection_view_model.dart';
+import 'package:day_picker/day_picker.dart';
 import 'package:parkinson_app/presentation/doctor_home/app_bar_bottom_nav_bar.dart';
 
 class DoctorDataCollectionScreen extends StatefulWidget {
@@ -184,7 +185,7 @@ class _DoctorDataCollectionScreenState
                               onPressed: () => _selectFromTime1(context),
                               child: Text(
                                 _fromTime1 != null
-                                    ? "${_fromTime1!.hour}:${_fromTime1!.minute}"
+                                    ? _formatTime(_fromTime1!)
                                     : "Select Time",
                                 style: TextStyle(
                                   fontSize: 20,
@@ -196,7 +197,7 @@ class _DoctorDataCollectionScreenState
                               onPressed: () => _selectToTime1(context),
                               child: Text(
                                 _toTime1 != null
-                                    ? "${_toTime1!.hour}:${_toTime1!.minute}"
+                                    ? _formatTime(_toTime1!)
                                     : "Select Time",
                                 style: TextStyle(
                                   fontSize: 20,
@@ -247,10 +248,8 @@ class _DoctorDataCollectionScreenState
                                   file != null &&
                                   _fromTime1 != null &&
                                   _toTime1 != null) {
-                                String fromTime =
-                                    "${_fromTime1!.hour}:${_fromTime1!.minute}";
-                                String toTime =
-                                    "${_fromTime1!.hour}:${_fromTime1!.minute}";
+                                String fromTime = _formatTime(_fromTime1!);
+                                String toTime = _formatTime(_toTime1!);
 
                                 viewModel.doctorDataCollection(
                                     file!,
@@ -307,6 +306,13 @@ class _DoctorDataCollectionScreenState
         _toTime1 = picked;
       });
     }
+  }
+
+  String _formatTime(TimeOfDay time) {
+    final now = DateTime.now();
+    final dateTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final formattedTime = DateFormat('HH:mm').format(dateTime);
+    return formattedTime;
   }
 
   Future pickImage() async {

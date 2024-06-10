@@ -139,7 +139,7 @@ class ApiManager {
       request.fields['startTime'] = startTime;
       request.fields['endTime'] = endTime;
       request.fields['step'] = step;
-
+      print(name);
       // Add the image file to the request
       var imageStream = http.ByteStream(image.openRead());
       var length = await image.length();

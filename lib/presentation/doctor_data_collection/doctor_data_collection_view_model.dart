@@ -33,6 +33,7 @@ class DoctorDataCollectionViewModel extends Cubit<DoctorDataCollectionState> {
 
       if (response.status == 200) {
         emit(HideLoadingState());
+        print(response.img);
 
         await DoctorPreference.saveUserName(name: name);
         await DoctorPreference.saveUserPhone(phone: phone);
