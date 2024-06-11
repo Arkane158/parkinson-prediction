@@ -25,6 +25,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _phoneController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _userNameController.dispose();
+    _passwordController.dispose();
+    _phoneController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -156,10 +164,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   posActionTitle: 'Ok');
                             } else if (state is SuccessState) {
                               Navigator.pushNamed(
-                                  context, VerifyScreen.screenName, arguments: [
-                                _emailController.text,
-                                SignUpScreen.screenName,
-                              ]);
+                                  context, VerifyScreen.screenName,
+                                  arguments: [
+                                    _emailController.text,
+                                    SignUpScreen.screenName,
+                                  ]);
                             } else if (state is HideLoadingState) {
                               Navigator.pop(context);
                             }

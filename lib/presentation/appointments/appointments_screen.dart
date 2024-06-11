@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:parkinson_app/presentation/appointments/appointment_item.dart';
 import 'package:parkinson_app/presentation/appointments/appointments_view_model.dart';
+import 'package:parkinson_app/presentation/custom_widgets/dialoge_utils.dart';
 
 class AppointmentsScreen extends StatefulWidget {
   static const String screenName = "appointments";
@@ -74,7 +75,24 @@ class _AppointmentsScreenState extends State<AppointmentsScreen> {
                       itemCount: viewModel.appointments.length,
                       itemBuilder: (context, index) {
                         final appointment = viewModel.appointments[index];
-                        return AppointmentItem(appointment: appointment);
+                        return AppointmentItem(
+                          appointment: appointment,
+                          cancelFun: (_) {
+                            DialogeUtils.showMessage(
+                                context, 'Are you sure you want to Cancel?',
+                                posAction: () async {
+                                  viewModel.canelAppoitment(
+                                      appointmentId: appointment.appointmentId,
+                                      reserveId: appointment.id,
+                                      timeOfDay: appointment.timeOfDay);
+                                },
+                                posActionTitle: 'Yes',
+                                negAction: () {
+                                  Navigator.pop(context);
+                                },
+                                negActionTitle: 'No');
+                          },
+                        );
                       },
                     );
                   } else {

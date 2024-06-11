@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:parkinson_app/data/model/appointment.dart';
 
 class CustomAppointmentWidget extends StatelessWidget {
-  final Appointment appointment;
+  final AppointmentResult appointment;
 
   const CustomAppointmentWidget({Key? key, required this.appointment})
       : super(key: key);
@@ -56,20 +57,46 @@ class CustomAppointmentWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CircleAvatar(
-                    child: Image(
-                        image: AssetImage('assets/images/patient_ex.png')),
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            CachedNetworkImageProvider(appointment.img),
+                      ),
+                      SizedBox(
+                        width: size.width * .02,
+                      ),
+                      Text(
+                        appointment
+                            .patientName, // You can replace this with the actual patient's name
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColor),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    width: size.width * .02,
-                  ),
-                  Text(
-                    'Ahmed Mohamed', // You can replace this with the actual patient's name
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).primaryColor),
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.watch_later_outlined,
+                            color: Color(0xff757575),
+                            size: 25,
+                          ),
+                          Text(
+                            appointment.timeOfDay,
+                            style: const TextStyle(
+                                color: Color(0xff757575),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -95,22 +122,7 @@ class CustomAppointmentWidget extends StatelessWidget {
                       )
                     ],
                   ),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.watch_later_outlined,
-                        color: Color(0xff757575),
-                        size: 25,
-                      ),
-                      Text(
-                        appointment.timeOfDay,
-                        style: const TextStyle(
-                            color: Color(0xff757575),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600),
-                      )
-                    ],
-                  ),
+                  Text(appointment.appointmentStatus)
                 ],
               ),
             )

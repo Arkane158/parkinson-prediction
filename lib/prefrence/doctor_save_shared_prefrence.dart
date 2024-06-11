@@ -13,6 +13,9 @@ class DoctorPreference {
   static const String _keyStep = 'step';
   static const String _editUserProfileId = 'editProfileId';
   static const String _profileId = '_id';
+  static const String _keyTitle = 'title';
+  static const String _keyAbout = 'about';
+  static const String _keyWhatsapp = 'whatsapp';
 
   static Future<void> saveUserData({
     required String email,
@@ -65,8 +68,7 @@ class DoctorPreference {
     return prefs.getString(_keyEmail);
   }
 
-  static Future<void> saveEditProfileId(
-      {required String editUserProfileId}) async {
+  static Future<void> saveEditProfileId({required String editUserProfileId}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_editUserProfileId, editUserProfileId);
   }
@@ -93,9 +95,46 @@ class DoctorPreference {
     await prefs.remove(_keyStartTime);
     await prefs.remove(_keyEndTime);
     await prefs.remove(_keyStep);
+    await prefs.remove(_keyTitle);
+    await prefs.remove(_keyAbout);
+    await prefs.remove(_keyWhatsapp);
   }
 
-  // New methods for phone, workdays, start time, and end time
+  // New methods for title and about
+
+  static Future<void> saveUserTitle({required String title}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyTitle, title);
+  }
+
+  static Future<String?> getUserTitle() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyTitle);
+  }
+
+  static Future<void> saveUserAbout({required String about}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyAbout, about);
+  }
+
+  static Future<String?> getUserAbout() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyAbout);
+  }
+
+  // New methods for whatsapp
+
+  static Future<void> saveUserWhatsapp({required String whatsapp}) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_keyWhatsapp, whatsapp);
+  }
+
+  static Future<String?> getUserWhatsapp() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_keyWhatsapp);
+  }
+
+  // Existing methods for phone, workdays, start time, and end time
 
   static Future<void> saveUserPhone({required String phone}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -156,18 +195,19 @@ class DoctorPreference {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_keyStep);
   }
+
   static Future<void> saveUserName({required String name}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_keyName, name);
   }
+
   static Future<String?> getProfileId() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_profileId);
   }
+
   static Future<void> saveProfileId({required String profileId}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString(_profileId, profileId);
   }
-
-
 }

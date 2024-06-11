@@ -19,6 +19,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   final TextEditingController _passwordConfirmationController =
       TextEditingController();
+  @override
+  dispose() {
+    _passwordConfirmationController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   late String email;
   ChangePasswordViewModel viewModel = ChangePasswordViewModel();

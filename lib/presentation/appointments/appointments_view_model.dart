@@ -7,7 +7,7 @@ import 'package:parkinson_app/prefrence/doctor_save_shared_prefrence.dart';
 
 class AppointmentViewModel extends Cubit<AppointmentState> {
   AppointmentViewModel() : super(LoadingState());
-  List<Appointment> appointments = [];
+  List<AppointmentResult> appointments = [];
   DateTime selectedDate = DateTime.now(); // Add this line
 
   void getAppointment() async {
@@ -45,6 +45,36 @@ class AppointmentViewModel extends Cubit<AppointmentState> {
   void setSelectedDate(DateTime date) {
     selectedDate = date;
     getAppointment(); // Refresh appointments when date changes
+  }
+
+  void canelAppoitment(
+      {required String appointmentId,
+      required String reserveId,
+      required String timeOfDay}) async {
+    try {
+      emit(LoadingState());
+
+      var response = await ApiManager.cancelAppointments(
+          timeOfDay: timeOfDay,
+          appointmentId: appointmentId,
+          reserveId: reserveId);
+      getAppointment();
+
+      if (response.status == 200) {
+        emit(HideLoadingState());
+        emit(SuccessState(response.message));
+      } else if (response.status == 404) {
+        emit(HideLoadingState());
+        emit(ErrorState('Something '));
+      }
+    } catch (e) {
+      emit(HideLoadingState());
+      if (e is IOException || e is HttpException) {
+        emit(ErrorState('Check Your Internet connection'));
+      } else {
+        emit(ErrorState(e.toString()));
+      }
+    }
   }
 }
 

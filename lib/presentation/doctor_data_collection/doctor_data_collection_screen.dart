@@ -26,6 +26,8 @@ class _DoctorDataCollectionScreenState
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _aboutController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
 
   final ImagePicker picker = ImagePicker();
   DoctorDataCollectionViewModel viewModel = DoctorDataCollectionViewModel();
@@ -33,8 +35,19 @@ class _DoctorDataCollectionScreenState
   TimeOfDay? _fromTime1;
   TimeOfDay? _toTime1;
   late List<String> selectedDays;
+  String? _whatsappCommunication;
 
   final _formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    _stepController.dispose();
+    _aboutController.dispose();
+    _addressController.dispose();
+    _phoneController.dispose();
+    _titleController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,12 +110,12 @@ class _DoctorDataCollectionScreenState
                         CustomTextFormField(
                           title: 'Phone Number',
                           controller: _phoneController,
-                          hint: 'Phone Number',
+                          hint: 'Whatsapp Phone Number',
                           icon: const Icon(Icons.phone),
                           type: TextInputType.phone,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please enter your phone number';
+                              return 'Please enter Whatsapp phone number';
                             }
                             return null;
                           },
@@ -116,6 +129,32 @@ class _DoctorDataCollectionScreenState
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your address';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: spacing),
+                        CustomTextFormField(
+                          title: 'Specialty',
+                          controller: _titleController,
+                          hint: 'Specialty',
+                          icon: const Icon(Icons.filter_frames_outlined),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your specialty';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: spacing),
+                        CustomTextFormField(
+                          title: 'About',
+                          controller: _aboutController,
+                          hint: 'Brief About Yourself',
+                          icon: const Icon(Icons.info_outline),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter a brief about yourself';
                             }
                             return null;
                           },
@@ -211,7 +250,7 @@ class _DoctorDataCollectionScreenState
                         CustomTextFormField(
                           title: 'Examination Time',
                           controller: _stepController,
-                          hint: 'Time of 1 ex in minutes',
+                          hint: 'Time of 1 exam in minutes',
                           icon: const Icon(Icons.timer),
                           type: TextInputType.number,
                           validator: (value) {
@@ -222,6 +261,41 @@ class _DoctorDataCollectionScreenState
                           },
                         ),
                         SizedBox(height: spacing),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            'Allow WhatsApp Communication',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                        ),
+                        RadioListTile<String>(
+                          title: const Text('Yes'),
+                          value: 'Yes',
+                          groupValue: _whatsappCommunication,
+                          onChanged: (value) {
+                            setState(() {
+                              _whatsappCommunication = value;
+                            });
+                          },
+                        ),
+                        RadioListTile<String>(
+                          title: const Text('No'),
+                          value: 'No',
+                          groupValue: _whatsappCommunication,
+                          onChanged: (value) {
+                            setState(() {
+                              _whatsappCommunication = value;
+                            });
+                          },
+                        ),
+                        if (_whatsappCommunication == null)
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              'Please select an option for WhatsApp communication',
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
                         BlocConsumer<DoctorDataCollectionViewModel,
                                 DoctorDataCollectionState>(
                             listener: (context, state) {
@@ -247,7 +321,8 @@ class _DoctorDataCollectionScreenState
                               if (_formKey.currentState!.validate() &&
                                   file != null &&
                                   _fromTime1 != null &&
-                                  _toTime1 != null) {
+                                  _toTime1 != null &&
+                                  _whatsappCommunication != null) {
                                 String fromTime = _formatTime(_fromTime1!);
                                 String toTime = _formatTime(_toTime1!);
 
@@ -259,7 +334,10 @@ class _DoctorDataCollectionScreenState
                                     selectedDays.toString(),
                                     fromTime,
                                     toTime,
-                                    _stepController.text);
+                                    _stepController.text,
+                                    _titleController.text,
+                                    _whatsappCommunication!,
+                                    _aboutController.text);
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -310,7 +388,8 @@ class _DoctorDataCollectionScreenState
 
   String _formatTime(TimeOfDay time) {
     final now = DateTime.now();
-    final dateTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final dateTime =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
     final formattedTime = DateFormat('HH:mm').format(dateTime);
     return formattedTime;
   }

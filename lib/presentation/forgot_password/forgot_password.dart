@@ -21,6 +21,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   ForgotPasswordViewModel viewModel = ForgotPasswordViewModel();
 
   final formKey = GlobalKey<FormState>();
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -26,6 +26,9 @@ class _EditAccountState extends State<EditAccount> {
   String? endTime;
   String? address;
   String? step;
+  String? about;
+  String? specialize;
+  String? whatsapp;
   @override
   void initState() {
     super.initState();
@@ -42,6 +45,9 @@ class _EditAccountState extends State<EditAccount> {
     String? doctorEndTime = await DoctorPreference.getUserEndTime();
     String? doctorStep = await DoctorPreference.getUserStep();
     String? doctorAddress = await DoctorPreference.getUserAddress();
+    String? doctortitle = await DoctorPreference.getUserTitle();
+    String? doctorAbout = await DoctorPreference.getUserAbout();
+    String? doctorWhatsapp = await DoctorPreference.getUserWhatsapp();
     setState(() {
       img = imageUrl != null && imageUrl.isNotEmpty
           ? convertDriveLink(imageUrl)
@@ -54,6 +60,9 @@ class _EditAccountState extends State<EditAccount> {
       endTime = doctorEndTime;
       step = doctorStep;
       address = doctorAddress;
+      whatsapp = doctorWhatsapp;
+      specialize = doctortitle;
+      about = doctorAbout;
     });
   }
 
@@ -181,6 +190,48 @@ class _EditAccountState extends State<EditAccount> {
                             tittle: 'address',
                             icon: const Icon(Icons.location_on_outlined),
                             content: 'Address: $address ',
+                          ),
+                        ),
+                  specialize == null
+                      ? const CircularProgressIndicator()
+                      : InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, ChangeAccountDataScreen.screenName,
+                                arguments: 'title');
+                          },
+                          child: EditAccountSection(
+                            tittle: 'title',
+                            icon: const Icon(Icons.filter_frames_outlined),
+                            content: 'title: $specialize ',
+                          ),
+                        ),
+                  about == null
+                      ? const CircularProgressIndicator()
+                      : InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, ChangeAccountDataScreen.screenName,
+                                arguments: 'about');
+                          },
+                          child: EditAccountSection(
+                            tittle: 'address',
+                            icon: const Icon(Icons.info_outline),
+                            content: 'about: $about ',
+                          ),
+                        ),
+                  whatsapp == null
+                      ? const CircularProgressIndicator()
+                      : InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, ChangeAccountDataScreen.screenName,
+                                arguments: 'whatsapp');
+                          },
+                          child: EditAccountSection(
+                            tittle: 'whatsapp',
+                            icon: const Icon(Icons.insert_comment_outlined),
+                            content: 'whatsapp: $whatsapp ',
                           ),
                         ),
                 ],

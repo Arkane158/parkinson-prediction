@@ -24,6 +24,14 @@ class _AddPatientScreenState extends State<AddPatientScreen> {
   final TextEditingController _addressController = TextEditingController();
   AddPatientViewModel viewModel = AddPatientViewModel();
   String? gender;
+  @override
+  dispose() {
+    _nameController.dispose();
+    _phoneController.dispose();
+    _ageController.dispose();
+    _addressController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

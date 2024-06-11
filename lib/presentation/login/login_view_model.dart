@@ -15,9 +15,8 @@ class LoginViewModel extends Cubit<LoginState> {
 
       if (response.status == 200) {
         emit(HideLoadingState());
-        await DoctorPreference.saveUserEmail(email: email);
+        await DoctorPreference.saveUserEmail(email: email); 
         await DoctorPreference.saveUserId(id: response.userId);
-
 
         if (response.doctor?.phone != null) {
           var doctor = response.doctor;
@@ -34,6 +33,10 @@ class LoginViewModel extends Cubit<LoginState> {
           await DoctorPreference.saveUserImg(img: response.doctor!.img!);
           await DoctorPreference.saveProfileId(
               profileId: response.doctor!.profileId!);
+          await DoctorPreference.saveUserWhatsapp(
+              whatsapp: response.doctor!.whatsapp!);
+          await DoctorPreference.saveUserTitle(title: response.doctor!.title!);
+          await DoctorPreference.saveUserAbout(about: response.doctor!.about!);
         }
         emit(SuccessState("Login Successfully", response.profileCheck));
       }

@@ -25,7 +25,13 @@ class _VerifyScreenState extends State<VerifyScreen> {
 
   final formKey = GlobalKey<FormState>();
   late String email;
+
   late Object previousScreenName;
+  @override
+  void dispose() {
+    pinController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

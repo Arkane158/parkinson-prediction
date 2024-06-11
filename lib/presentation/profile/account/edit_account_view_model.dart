@@ -44,12 +44,18 @@ class EditAccountViewModel extends Cubit<EditAccountState> {
     required String workdays,
     required String startTime,
     required String endTime,
+    required String about,
+    required String title,
+    required String whatsapp,
     required String step,
   }) async {
     try {
       emit(LoadingState());
       String? userId = await DoctorPreference.getUserId();
       var response = await ApiManager.editProfile(
+          about: about,
+          title: title,
+          whatsapp: whatsapp,
           userId: userId!,
           phone: phone,
           name: name,
@@ -65,6 +71,9 @@ class EditAccountViewModel extends Cubit<EditAccountState> {
       await DoctorPreference.saveUserWorkdays(workdays: workdays.toString());
       await DoctorPreference.saveUserAddress(address: address);
       await DoctorPreference.saveUserStep(step: step);
+      await DoctorPreference.saveUserAbout(about: about);
+      await DoctorPreference.saveUserTitle(title: title);
+      await DoctorPreference.saveUserWhatsapp(whatsapp: whatsapp);
 
       if (response.status == 200) {
         emit(HideLoadingState());

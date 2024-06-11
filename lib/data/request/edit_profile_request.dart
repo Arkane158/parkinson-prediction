@@ -6,18 +6,23 @@ class EditProfileRequest {
   final String workdays;
   final String startTime;
   final String endTime;
+  final String title;
+  final String about;
   final String step;
+  final String whatsapp;
 
-  EditProfileRequest({
-    required this.userId,
-    required this.phone,
-    required this.name,
-    required this.address,
-    required this.workdays,
-    required this.startTime,
-    required this.endTime,
-    required this.step,
-  });
+  EditProfileRequest(
+      {required this.userId,
+      required this.phone,
+      required this.name,
+      required this.address,
+      required this.workdays,
+      required this.startTime,
+      required this.endTime,
+      required this.step,
+      required this.title,
+      required this.whatsapp,
+      required this.about});
 
   Map<String, dynamic> toJson() {
     return {
@@ -29,6 +34,9 @@ class EditProfileRequest {
       'startTime': startTime,
       'endTime': endTime,
       'step': step,
+      'title': title,
+      'about': about,
+      'whatsapp': whatsapp,
     };
   }
 }

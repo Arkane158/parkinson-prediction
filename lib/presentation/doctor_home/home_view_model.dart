@@ -7,7 +7,7 @@ import 'package:parkinson_app/prefrence/doctor_save_shared_prefrence.dart';
 
 class HomeViewModel extends Cubit<HomeState> {
   HomeViewModel() : super(LoadingState());
-  List<Appointment> appointments = [];
+  List<AppointmentResult> appointments = [];
 
   void getAppointment() async {
     var userId = await DoctorPreference.getUserId();

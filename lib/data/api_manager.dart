@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http_parser/http_parser.dart';
 import 'package:parkinson_app/data/request/add_patinet_request.dart';
 import 'package:parkinson_app/data/request/appointment_request.dart';
+import 'package:parkinson_app/data/request/cancel_request.dart';
 import 'package:parkinson_app/data/request/delete_patient_request.dart';
 import 'package:parkinson_app/data/request/edit_patient_request.dart';
 import 'package:parkinson_app/data/request/edit_profile_request.dart';
@@ -18,6 +19,7 @@ import 'package:parkinson_app/data/request/verification_request.dart';
 import 'package:parkinson_app/data/request/verify_reset_password_request.dart';
 import 'package:parkinson_app/data/response/add_patient_response.dart';
 import 'package:parkinson_app/data/response/appointment_response.dart';
+import 'package:parkinson_app/data/response/cancel_appointment_response.dart';
 import 'package:parkinson_app/data/response/delete_patient_response.dart';
 import 'package:parkinson_app/data/response/doctor_data_collection_response.dart';
 import 'package:parkinson_app/data/response/edit_patient_response.dart';
@@ -53,6 +55,7 @@ class ApiManager {
   static const String appointmentUrl = '/apoinmments';
   static const String newImageUrl = '/new-profileImage';
   static const String scoreUrl = '/score';
+  static const String cancelAppointmentUrl = '/cancel-apoinmment';
 
   static Future<SignUpResponse> signUpRequset({
     required String email,
@@ -122,6 +125,9 @@ class ApiManager {
     required String startTime,
     required String endTime,
     required String step,
+    required String about,
+    required String whatsapp,
+    required String title,
   }) async {
     try {
       // Create a multipart request
@@ -139,7 +145,9 @@ class ApiManager {
       request.fields['startTime'] = startTime;
       request.fields['endTime'] = endTime;
       request.fields['step'] = step;
-      print(name);
+      request.fields['about'] = about;
+      request.fields['title'] = title;
+      request.fields['whatsapp'] = whatsapp;
       // Add the image file to the request
       var imageStream = http.ByteStream(image.openRead());
       var length = await image.length();
@@ -240,14 +248,20 @@ class ApiManager {
       required String workdays,
       required String startTime,
       required String endTime,
+      required String about,
+      required String title,
+      required String whatsapp,
       required String step}) async {
     var requestBody = EditProfileRequest(
+        whatsapp: whatsapp,
         userId: userId,
         phone: phone,
         name: name,
         address: address,
         workdays: workdays,
         startTime: startTime,
+        about: about,
+        title: title,
         endTime: endTime,
         step: step);
     var url = Uri.https(baseUrl, editProfileUrl);
@@ -353,5 +367,19 @@ class ApiManager {
     var requestBody = ScoreRequest(userId: userId, score: score);
     var response = await http.post(url, body: requestBody.toJson());
     return ScoreResponse.fromJson(jsonDecode(response.body));
+  }
+
+  static Future<CancelAppointmentResponse> cancelAppointments(
+      {required String appointmentId,
+      required String reserveId,
+      required String timeOfDay}) async {
+    var url = Uri.parse(
+        'https://parkinson-9ek4.onrender.com/patient$cancelAppointmentUrl');
+    var requestBody = CancelAppointmentRequest(
+        timeOfDay: timeOfDay,
+        reservationId: reserveId,
+        appointmentId: appointmentId);
+    var response = await http.post(url, body: requestBody.toJson());
+    return CancelAppointmentResponse.fromJson(jsonDecode(response.body));
   }
 }

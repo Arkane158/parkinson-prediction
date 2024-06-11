@@ -41,6 +41,7 @@ class _EditScreenState extends State<EditScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    
     super.dispose();
   }
 

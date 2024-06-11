@@ -32,6 +32,9 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
   TimeOfDay? _toTime1;
   List<String> selectedDays = [];
   String? address;
+  String? specialize;
+  String? about;
+  String? whatsapp;
 
   @override
   void initState() {
@@ -48,6 +51,9 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
     String? doctorEndTime = await DoctorPreference.getUserEndTime();
     String? doctorStep = await DoctorPreference.getUserStep();
     String? doctorAddress = await DoctorPreference.getUserAddress();
+    String? doctorTitle = await DoctorPreference.getUserTitle();
+    String? doctorAbout = await DoctorPreference.getUserAbout();
+    String? doctorWhatsapp = await DoctorPreference.getUserWhatsapp();
     setState(() {
       name = doctorName;
       email = doctorEmail;
@@ -57,6 +63,9 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
       endTime = doctorEndTime;
       step = doctorStep;
       address = doctorAddress;
+      specialize = doctorTitle ?? 'title';
+      about = doctorAbout ?? 'Dr Mohamed';
+      whatsapp = doctorWhatsapp ?? 'yes';
     });
   }
 
@@ -91,6 +100,8 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                           children: [
                             if (title == 'name' ||
                                 title == 'phone' ||
+                                title == 'title' ||
+                                title == 'about' ||
                                 title == 'address')
                               CustomTextFormField(
                                 type: title == 'phone'
@@ -225,6 +236,36 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                     },
                                   ),
                                   SizedBox(height: spacing),
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      'WhatsApp Communication',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall,
+                                    ),
+                                  ),
+                                  RadioListTile<String>(
+                                    title: const Text('Yes'),
+                                    value: 'Yes',
+                                    groupValue: whatsapp,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        whatsapp = value;
+                                      });
+                                    },
+                                  ),
+                                  RadioListTile<String>(
+                                    title: const Text('No'),
+                                    value: 'No',
+                                    groupValue: whatsapp,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        whatsapp = value;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(height: spacing),
                                 ],
                               )
                           ],
@@ -252,12 +293,15 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                         builder: (context, state) {
                           return Padding(
                             padding: EdgeInsets.symmetric(
-                                horizontal: size.width * .05),
+                                horizontal: size.width * .05,
+                                vertical: size.height * .2),
                             child: CustomElevatedButton(
                               onPressed: () {
                                 if (_formKey.currentState?.validate() ??
                                     false) {
                                   if (title != 'name' &&
+                                      title != 'about' &&
+                                      title != title &&
                                       title != 'phone' &&
                                       title != 'address') {
                                     if (selectedDays.isEmpty) {
@@ -296,6 +340,13 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                           "${_toTime1!.hour.toString().padLeft(2, '0')}:${_toTime1!.minute.toString().padLeft(2, '0')}";
                                     }
                                   }
+                                  if (title == 'about') {
+                                    about = editController.text;
+                                  }
+                                  if (title == 'title') {
+                                    specialize = editController.text;
+                                  }
+
                                   viewModel.editProfile(
                                     phone: phone!,
                                     name: name!,
@@ -304,6 +355,9 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                     startTime: startTime!,
                                     endTime: endTime!,
                                     step: step!,
+                                    title: specialize!,
+                                    about: about!,
+                                    whatsapp: whatsapp!,
                                   );
                                 }
                               },
