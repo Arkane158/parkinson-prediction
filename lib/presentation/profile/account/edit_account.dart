@@ -215,7 +215,7 @@ class _EditAccountState extends State<EditAccount> {
                                 arguments: 'about');
                           },
                           child: EditAccountSection(
-                            tittle: 'address',
+                            tittle: 'about',
                             icon: const Icon(Icons.info_outline),
                             content: 'about: $about ',
                           ),

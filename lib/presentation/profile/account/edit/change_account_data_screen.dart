@@ -54,6 +54,7 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
     String? doctorTitle = await DoctorPreference.getUserTitle();
     String? doctorAbout = await DoctorPreference.getUserAbout();
     String? doctorWhatsapp = await DoctorPreference.getUserWhatsapp();
+
     setState(() {
       name = doctorName;
       email = doctorEmail;
@@ -66,6 +67,11 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
       specialize = doctorTitle ?? 'title';
       about = doctorAbout ?? 'Dr Mohamed';
       whatsapp = doctorWhatsapp ?? 'yes';
+
+      // Populate the selectedDays list
+      if (workDays != null) {
+        selectedDays = workDays!.split(', ');
+      }
     });
   }
 
@@ -76,6 +82,28 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
     title = ModalRoute.of(context)?.settings.arguments as String;
     var height = MediaQuery.of(context).size.height;
     var spacing = height * .02;
+
+    // Initialize the controller with the respective value
+    switch (title) {
+      case 'name':
+        editController.text = name ?? '';
+        break;
+      case 'phone':
+        editController.text = phone ?? '';
+        break;
+      case 'address':
+        editController.text = address ?? '';
+        break;
+      case 'about':
+        editController.text = about ?? '';
+        break;
+      case 'title':
+        editController.text = specialize ?? '';
+        break;
+      default:
+        editController.clear();
+        break;
+    }
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -301,7 +329,7 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                     false) {
                                   if (title != 'name' &&
                                       title != 'about' &&
-                                      title != title &&
+                                      title != 'title' &&
                                       title != 'phone' &&
                                       title != 'address') {
                                     if (selectedDays.isEmpty) {
@@ -323,13 +351,21 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                       return;
                                     }
                                   }
+
                                   if (title == 'address') {
                                     address = editController.text;
                                   } else if (title == 'phone') {
                                     phone = editController.text;
                                   } else if (title == 'name') {
                                     name = editController.text;
-                                  } else if (title == 'workDays') {
+                                  } else if (title == 'about') {
+                                    about = editController.text;
+                                  } else if (title == 'title') {
+                                    specialize = editController.text;
+                                  }
+
+                                  // When editing workdays, update all related fields
+                                  if (title == 'workDays') {
                                     step = editController.text;
                                     if (_fromTime1 != null) {
                                       startTime =
@@ -340,18 +376,12 @@ class _ChangeAccountDataScreenState extends State<ChangeAccountDataScreen> {
                                           "${_toTime1!.hour.toString().padLeft(2, '0')}:${_toTime1!.minute.toString().padLeft(2, '0')}";
                                     }
                                   }
-                                  if (title == 'about') {
-                                    about = editController.text;
-                                  }
-                                  if (title == 'title') {
-                                    specialize = editController.text;
-                                  }
 
                                   viewModel.editProfile(
                                     phone: phone!,
                                     name: name!,
                                     address: address!,
-                                    workdays: selectedDays.toString(),
+                                    workdays: selectedDays.join(', '),
                                     startTime: startTime!,
                                     endTime: endTime!,
                                     step: step!,

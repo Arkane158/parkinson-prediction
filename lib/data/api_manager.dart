@@ -264,6 +264,7 @@ class ApiManager {
         title: title,
         endTime: endTime,
         step: step);
+    print(requestBody.toJson());
     var url = Uri.https(baseUrl, editProfileUrl);
     var response = await http.post(url, body: requestBody.toJson());
     return EditProfileResponse.fromJson(jsonDecode(response.body));
